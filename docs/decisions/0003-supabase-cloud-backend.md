@@ -1,31 +1,30 @@
-# ADR 0003: Supabase sebagai cloud backend
+# ADR 0003: Supabase as the cloud backend
 
 - Status: Accepted
-- Tanggal: 2026-08-27
+- Date: 2026-08-27
 
 ## Context
 
-MVP membutuhkan registrasi/login/recovery, activation-code ownership, device binding, backup data, synchronization, dan server-enforced authorization tanpa membangun seluruh backend platform dari nol.
+The MVP requires registration/login/recovery, activation-code ownership, device binding, data backup, synchronization, and server-enforced authorization without building an entire backend platform from scratch.
 
 ## Decision
 
-Gunakan Supabase untuk Auth, Postgres, Row Level Security, dan backend functions ketika operasi membutuhkan secret atau transaksi server-side. Semua schema dan policy diperlakukan sebagai versioned migrations.
+Use Supabase for Auth, Postgres, Row Level Security, and backend functions when an operation requires a secret or server-side transaction. Treat every schema and policy as a versioned migration.
 
 ## Consequences
 
-- RLS deny-by-default dan ownership tests wajib sebelum table dapat digunakan app.
-- Service-role operations hanya berjalan di trusted server boundary.
-- App mengakses Supabase melalui application port, bukan langsung dari screen/component.
-- Local-first behavior tetap berlaku; Supabase outage tidak memblokir aktivitas lokal yang sudah tersedia.
+- RLS is deny-by-default and ownership tests are required before the app may use a table.
+- Service-role operations run only inside a trusted server boundary.
+- The app accesses Supabase through an application port, never directly from a screen or component.
+- Local-first behavior remains in force; a Supabase outage does not block already-available local activities.
 
 ## Alternatives considered
 
-- Custom backend penuh: kontrol tinggi tetapi memperbesar waktu dan operational scope MVP.
-- Firebase: memenuhi banyak kebutuhan mobile, tetapi relational model, ledger, dan transaction needs lebih selaras dengan Postgres.
+- Fully custom backend: offers high control but expands MVP delivery and operational scope.
+- Firebase: provides many mobile capabilities, but the relational model, ledger, and transaction requirements align better with Postgres.
 
 ## Open questions
 
-- Batas antara database function dan Edge Function untuk activation/rebinding.
-- Retention data dan mekanisme account deletion.
-- Detail merge/recovery ketika pengguna mengganti ponsel.
-
+- Boundary between database functions and Edge Functions for activation/rebinding.
+- Data retention and account-deletion mechanism.
+- Merge/recovery details when a user changes phones.

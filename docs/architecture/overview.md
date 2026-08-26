@@ -1,6 +1,6 @@
 # Quba App Architecture Overview
 
-Status: baseline untuk Foundation phase. Detail implementasi boleh berkembang melalui ADR, tetapi invariant data dan dependency di bawah tidak boleh dilanggar tanpa review eksplisit.
+Status: Foundation-phase baseline. Implementation details may evolve through ADRs, but the data and dependency invariants below must not be violated without explicit review.
 
 ## System context
 
@@ -28,62 +28,62 @@ Supabase
 └── server-enforced authorization
 ```
 
-Dependency hanya bergerak dari luar ke dalam: presentation dan infrastructure bergantung pada application/domain contracts. Domain tidak mengenal framework atau vendor.
+Dependencies move only from the outside inward: presentation and infrastructure depend on application/domain contracts. Domain does not know any framework or vendor.
 
 ## Responsibility boundaries
 
 ### Quba App
 
-- Menjadi pusat konfigurasi habit, schedule, activity run, pairing, koreksi, dan refleksi.
-- Menyimpan state operasional di SQLite agar UI dan use case inti tidak bergantung pada jaringan.
-- Mengambil event robot sebelum mengirim konfigurasi baru.
-- Merekonsiliasi event secara idempotent dan menampilkan hasil sinkronisasi yang dapat dipahami.
+- Acts as the center for habit, schedule, activity-run, pairing, correction, and reflection configuration.
+- Stores operational state in SQLite so UI and core use cases do not depend on the network.
+- Pulls robot events before sending new configuration.
+- Reconciles events idempotently and presents understandable synchronization results.
 
 ### Quba Bot
 
-- Menjalankan reminder, counter, checklist, dan countdown yang telah tersinkron.
-- Menyimpan event offline secara persisten sampai menerima acknowledgement.
-- Tidak menjadi tempat konfigurasi habit kompleks.
-- Menolak payload/protocol version yang tidak kompatibel tanpa merusak state terakhir yang valid.
+- Runs synchronized reminders, counters, checklists, and countdowns.
+- Persists offline events until it receives an acknowledgement.
+- Does not host complex habit configuration.
+- Rejects incompatible payload/protocol versions without corrupting the last valid state.
 
 ### Supabase
 
-- Menangani auth, aktivasi, ownership, recovery, backup, dan sinkronisasi cloud.
-- Menegakkan authorization melalui RLS/server boundary.
-- Tidak berada di critical path untuk menjalankan aktivitas lokal yang sudah tersedia.
+- Handles authentication, activation, ownership, recovery, backup, and cloud synchronization.
+- Enforces authorization through RLS/server boundaries.
+- Does not sit on the critical path for running an already-available local activity.
 
 ## Core data rules
 
 ### Configuration
 
-- Habit dan schedule memakai `config_version` monotonik.
-- App/backend memenangkan konflik konfigurasi pada MVP.
-- Delete direpresentasikan sebagai archive/tombstone sampai semua consumer yang relevan aman.
+- Habits and schedules use a monotonically increasing `config_version`.
+- App/backend wins configuration conflicts in the MVP.
+- Delete is represented as an archive/tombstone until every relevant consumer is safe.
 
 ### Activity events
 
-- Event append-only dengan `event_id` global unik.
-- Robot mengirim ulang event sampai acknowledgement diterima.
-- Aplikasi boleh menerima event yang sama berkali-kali tetapi hanya menerapkannya sekali.
-- Event mentah tidak langsung memberikan XP; reconciliation menentukan occurrence dan menulis XP ledger idempotent.
+- Events are append-only with globally unique `event_id` values.
+- The robot resends an event until it receives an acknowledgement.
+- The application may receive the same event repeatedly but applies it only once.
+- Raw events do not award XP directly; reconciliation resolves the occurrence and writes an idempotent XP ledger entry.
 
 ### Activity runs
 
-- Linked run hanya menunjuk habit dengan tipe yang kompatibel.
-- `occurrence_id` digunakan ketika occurrence relevan tersedia.
-- Standalone run tidak memiliki `habit_id` atau `occurrence_id` dan tidak memengaruhi streak/badge habit.
-- Beberapa run dapat berkontribusi pada satu occurrence tanpa menghasilkan completion atau reward ganda.
+- A linked run references only a habit with a compatible type.
+- Use `occurrence_id` when a relevant occurrence is available.
+- A standalone run has no `habit_id` or `occurrence_id` and does not affect habit streaks or badges.
+- Multiple runs may contribute to one occurrence without producing duplicate completion or rewards.
 
 ### Time
 
-- Instant disimpan dalam UTC.
-- Jadwal lokal menyimpan timezone dan local-time intent, bukan hanya hasil konversi sesaat.
-- Event robot membawa waktu rekam dan device clock offset yang dibutuhkan untuk rekonsiliasi.
-- Perubahan timezone, clock drift, dan daylight-saving behavior harus ditangani sebagai domain case eksplisit.
+- Store instants in UTC.
+- A local schedule stores its timezone and local-time intent, not only a one-time conversion result.
+- Robot events include the recorded time and device clock offset required for reconciliation.
+- Timezone changes, clock drift, and daylight-saving behavior are explicit domain cases.
 
 ## Sync state machine
 
-Alur minimum:
+Minimum flow:
 
 ```text
 discover → connect → authenticate/protocol-check
@@ -97,11 +97,11 @@ discover → connect → authenticate/protocol-check
 → report full/partial/failure outcome
 ```
 
-Koneksi dapat terputus pada setiap langkah. Setiap langkah harus dapat diulang tanpa kehilangan event, konfigurasi valid terakhir, atau pemberian reward ganda.
+The connection may drop at any step. Every step must be safely repeatable without losing events, the last valid configuration, or awarding a reward twice.
 
 ## Initial module boundaries
 
-Nama folder final dikunci saat scaffold, tetapi module boundary awal adalah:
+Final folder names are locked during scaffolding, but the initial module boundaries are:
 
 - `auth-activation`
 - `devices-pairing`
@@ -113,23 +113,22 @@ Nama folder final dikunci saat scaffold, tetapi module boundary awal adalah:
 - `statistics`
 - `settings-profile`
 
-Shared code hanya dibuat untuk konsep yang benar-benar lintas domain. Hindari folder `utils` yang menjadi tempat dependency tanpa ownership.
+Create shared code only for concepts that genuinely cross domains. Avoid a `utils` folder that becomes an ownerless dependency sink.
 
 ## Security and privacy baseline
 
-- Service-role key tidak pernah berada di bundle app.
-- Token disimpan melalui secure platform storage, bukan plain SQLite atau logs.
-- Device ownership diverifikasi di server; BLE proximity saja bukan bukti ownership.
-- Sensitive diagnostics direduksi atau disamarkan.
-- Analytics hanya menyimpan event dan metadata yang diperlukan untuk metrik PRD.
+- A service-role key never enters the application bundle.
+- Store tokens through secure platform storage, not plain SQLite or logs.
+- Verify device ownership on the server; BLE proximity alone is not proof of ownership.
+- Redact or minimize sensitive diagnostics.
+- Analytics stores only the events and metadata required by PRD metrics.
 
 ## Open architecture inputs
 
-Item berikut belum dapat dikunci sebelum feasibility hardware:
+The following items cannot be locked before hardware feasibility work:
 
-- BLE service/characteristic dan protocol framing.
-- MTU, throughput, bonding, retry window, dan acknowledgement detail.
-- Kapasitas habit, reminder, serta offline event queue.
+- BLE services/characteristics and protocol framing.
+- MTU, throughput, bonding, retry window, and acknowledgement details.
+- Habit, reminder, and offline event-queue capacity.
 - Firmware update path.
-- RTC accuracy dan recovery setelah kehilangan daya.
-
+- RTC accuracy and recovery after power loss.

@@ -1,41 +1,40 @@
 # Definition of Done
 
-Checklist ini berlaku untuk setiap perubahan. Item yang tidak relevan ditandai `N/A` beserta alasan pada task brief atau pull request.
+This checklist applies to every change. Mark an irrelevant item `N/A` and record the reason in the task brief or pull request.
 
 ## Scope and correctness
 
-- [ ] Goal, non-goals, dan acceptance criteria task jelas serta terpenuhi.
-- [ ] Implementasi konsisten dengan PRD, architecture overview, dan ADR accepted.
-- [ ] Tidak ada perubahan di luar scope atau dependency baru tanpa review.
-- [ ] Failure, offline, retry, partial-success, dan recovery behavior yang relevan didefinisikan.
-- [ ] Data integrity dan idempotency dipertahankan.
+- [ ] Task goals, non-goals, and acceptance criteria are clear and satisfied.
+- [ ] The implementation is consistent with the PRD, architecture overview, and Accepted ADRs.
+- [ ] No out-of-scope change or unreviewed dependency is present.
+- [ ] Relevant failure, offline, retry, partial-success, and recovery behavior is defined.
+- [ ] Data integrity and idempotency are preserved.
 
 ## Quality
 
-- [ ] Formatting, lint, TypeScript, tests, dan React diagnostics lulus melalui command kanonis.
-- [ ] Test baru membuktikan behavior dan regression berisiko.
-- [ ] Tidak ada test yang dilewati, dibuat flaky, atau dilemahkan tanpa alasan eksplisit.
-- [ ] Build/runtime verification dilakukan pada platform yang relevan.
-- [ ] Diff telah direview oleh reviewer terpisah untuk perubahan non-trivial.
+- [ ] Formatting, lint, TypeScript, tests, and React diagnostics pass through the canonical command.
+- [ ] New tests prove the behavior and relevant regressions.
+- [ ] No test is skipped, made flaky, or weakened without an explicit reason.
+- [ ] Build/runtime verification is complete on relevant platforms.
+- [ ] A separate reviewer has reviewed the diff for a non-trivial change.
 
 ## Product experience
 
-- [ ] Loading, empty, success, offline, dan error states relevan tersedia.
-- [ ] Accessibility dan reduced-motion behavior diverifikasi.
-- [ ] Copy konsisten dengan tone Quba dan siap localization.
-- [ ] UI tidak membocorkan internal error code tanpa penjelasan/action.
+- [ ] Relevant loading, empty, success, offline, and error states are available.
+- [ ] Accessibility and reduced-motion behavior are verified.
+- [ ] Copy follows the Quba tone and is ready for localization.
+- [ ] UI does not expose an internal error code without an explanation/action.
 
 ## Security, privacy, and operations
 
-- [ ] Auth/authorization dan ownership boundary diuji jika tersentuh.
-- [ ] Tidak ada secret atau sensitive data di source/log/analytics.
-- [ ] Migration, rollback/recovery, dan compatibility diperiksa jika relevan.
-- [ ] Error penting memiliki diagnosability yang aman.
+- [ ] Authentication/authorization and ownership boundaries are tested when affected.
+- [ ] Source, logs, and analytics contain no secrets or sensitive data.
+- [ ] Migration, rollback/recovery, and compatibility are checked when relevant.
+- [ ] Important errors have safe diagnostics.
 
 ## Handoff
 
-- [ ] Task brief memuat status, keputusan, file berubah, dan verification evidence.
-- [ ] ADR/dokumentasi diperbarui bila invariant atau behavior berubah.
-- [ ] Known limitations, blocker, dan next step dicatat.
-- [ ] Working tree dan commit state dapat dipahami agent penerima.
-
+- [ ] The task brief includes status, decisions, changed files, and verification evidence.
+- [ ] ADRs/documentation are updated when an invariant or behavior changes.
+- [ ] Known limitations, blockers, and next steps are recorded.
+- [ ] The working tree and commit state are understandable to the receiving agent.

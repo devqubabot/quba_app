@@ -1,90 +1,91 @@
 # Quba App Agent Contract
 
-Instruksi ini berlaku untuk seluruh repository. Instruksi yang lebih dekat dengan folder kerja boleh menambah aturan khusus, tetapi tidak boleh melemahkan safety, data integrity, security, atau quality gates di dokumen ini.
+These instructions apply to the entire repository. Instructions closer to a working directory may add specific rules, but they must not weaken the safety, data integrity, security, or quality gates defined here.
 
-## Mulai setiap task
+## Start every task
 
-1. Baca `QUBA_PRD_MVP_v1.0.md` pada bagian yang relevan.
-2. Baca `docs/architecture/overview.md` dan ADR terkait di `docs/decisions/`.
-3. Baca task brief aktif di `docs/tasks/`. Jangan coding tanpa goal, non-goals, dan acceptance criteria yang jelas.
-4. Periksa status Git dan pertahankan perubahan pengguna atau agent lain yang tidak termasuk scope.
-5. Tulis atau perbarui rencana implementasi di task brief untuk pekerjaan non-trivial.
+1. Read the relevant sections of `QUBA_PRD_MVP_v1.0.md`.
+2. Read `docs/architecture/overview.md` and the related ADRs in `docs/decisions/`.
+3. Read the active task brief in `docs/tasks/`. Do not code without clear goals, non-goals, and acceptance criteria.
+4. Read `docs/engineering/language-policy.md` and use its canonical vocabulary for engineering artifacts.
+5. Check Git status and preserve user or other-agent changes that are outside the task scope.
+6. Write or update the implementation plan in the task brief for non-trivial work.
 
 ## Product invariants
 
-- MVP berfokus pada satu pemilik akun, satu robot, dan Self Mode.
-- App menangani konfigurasi dan refleksi; robot menangani reminder, aktivitas, feedback, serta event offline.
-- Aktivitas inti robot tetap berjalan tanpa ponsel setelah konfigurasi tersinkron.
-- Activity event bersifat append-only dan dideduplikasi dengan `event_id`.
-- XP, completion, dan streak harus idempotent. Retry tidak boleh memberi reward ganda.
-- Konfigurasi menggunakan versi monotonik. Penghapusan habit menggunakan archive/tombstone sampai sinkronisasi aman.
-- Linked activity dan standalone activity tidak boleh dicampur. Standalone activity tidak membuat occurrence, streak, atau XP pada baseline MVP.
-- Bahasa dan gamifikasi bersifat mendukung, tidak menghakimi, dan tidak menilai kualitas spiritual pengguna.
-- Semua flow memiliki empty, loading, success, offline, partial-success, dan actionable error states yang relevan.
+- The MVP focuses on one account owner, one robot, and Self Mode.
+- The app handles configuration and reflection; the robot handles reminders, activities, feedback, and offline events.
+- Core robot activities continue without a phone after configuration has synchronized.
+- Activity events are append-only and deduplicated by `event_id`.
+- XP, completion, and streak updates must be idempotent. A retry must never award a reward twice.
+- Configuration uses monotonically increasing versions. Habit deletion uses archive/tombstone semantics until synchronization is safe.
+- Linked and standalone activities must not be mixed. A standalone activity does not create an occurrence, streak, or XP in the baseline MVP.
+- Language and gamification must be supportive, non-judgmental, and must not evaluate the spiritual quality of a user.
+- Every flow includes the relevant empty, loading, success, offline, partial-success, and actionable error states.
 
 ## Architecture boundaries
 
-- UI tidak boleh mengakses BLE, SQLite, atau Supabase secara langsung.
-- Domain logic tidak mengimpor React, Expo, Supabase, SQLite, atau implementasi BLE.
-- Infrastructure mengimplementasikan port/application contract dan menerjemahkan error eksternal menjadi typed application errors.
-- SQLite adalah operational read/write store pada perangkat. Cloud sync tidak boleh membuat fitur lokal inti menunggu jaringan.
-- Supabase adalah boundary untuk auth, ownership, backup, dan cloud synchronization; secrets atau service-role key tidak boleh masuk ke app.
-- Semua payload dari BLE, storage, network, deep link, dan input pengguna divalidasi pada boundary.
-- Waktu disimpan secara eksplisit; bedakan instant UTC, timezone, scheduled local time, dan device clock offset.
-- Side effect sinkronisasi harus retry-safe, observable, dan dapat dilanjutkan setelah proses terputus.
+- UI must not access BLE, SQLite, or Supabase directly.
+- Domain logic must not import React, Expo, Supabase, SQLite, or a BLE implementation.
+- Infrastructure implements ports/application contracts and translates external failures into typed application errors.
+- SQLite is the operational read/write store on the device. Cloud sync must not make core local features wait for the network.
+- Supabase is the boundary for authentication, ownership, backup, and cloud synchronization; secrets and service-role keys must never enter the app.
+- Validate every BLE, storage, network, deep-link, and user-input payload at its boundary.
+- Store time explicitly; distinguish UTC instants, timezones, scheduled local time, and device clock offsets.
+- Synchronization side effects must be retry-safe, observable, and resumable after interruption.
 
 ## Coding rules
 
-- Gunakan TypeScript strict. Jangan gunakan `any` tanpa alasan boundary yang didokumentasikan dan penyempitan tipe segera.
-- Utamakan fungsi kecil, pure domain logic, explicit dependency injection, dan named domain types daripada primitive yang ambigu.
-- Jangan menambahkan dependency produksi tanpa mencatat alasan, alternatif, ukuran/risk impact, serta persetujuan scope task.
-- Jangan membuat barrel export luas yang menyembunyikan dependency cycle.
-- Pisahkan copy pengguna dari logic agar localization dapat diterapkan.
-- Jangan log password, token, activation code penuh, device identifier penuh, atau data pribadi yang tidak diperlukan.
-- Accessibility dan reduced motion merupakan acceptance criteria, bukan cleanup terpisah.
-- Optimasi performance harus berdasarkan pengukuran. Hindari render, subscription, atau bridge traffic yang tidak diperlukan pada hot path.
-- Perubahan schema harus melalui migration forward-only dan memiliki test upgrade dari versi sebelumnya.
+- Use strict TypeScript. Do not use `any` without a documented boundary reason and immediate type narrowing.
+- Prefer small functions, pure domain logic, explicit dependency injection, and named domain types over ambiguous primitives.
+- Do not add a production dependency without recording its rationale, alternatives, size/risk impact, and task-scope approval.
+- Do not create broad barrel exports that hide dependency cycles.
+- Separate user-facing copy from logic so localization can be applied.
+- Do not log passwords, tokens, full activation codes, full device identifiers, or unnecessary personal data.
+- Accessibility and reduced motion are acceptance criteria, not separate cleanup work.
+- Base performance optimization on measurement. Avoid unnecessary renders, subscriptions, or bridge traffic on hot paths.
+- Schema changes must use forward-only migrations and include an upgrade test from the previous version.
 
 ## Testing rules
 
-- Perubahan behavior harus disertai test pada level terendah yang dapat membuktikannya.
-- Uji behavior yang terlihat pengguna, bukan detail implementasi komponen.
-- Sync, XP ledger, event deduplication, occurrence, dan retry wajib memiliki deterministic tests.
-- BLE diuji melalui contract/fake adapter; critical journey tetap wajib diverifikasi pada perangkat fisik.
-- Database migration diuji terhadap database versi sebelumnya dan data yang sudah ada.
-- Supabase policy/RLS diuji menggunakan role yang realistis; jangan hanya menguji dengan privileged client.
-- Test tidak boleh bergantung pada waktu nyata, urutan global, jaringan publik, atau hardware yang tidak dinyatakan sebagai test khusus.
+- Every behavior change must include a test at the lowest level that proves it.
+- Test user-visible behavior instead of component implementation details.
+- Sync, XP ledger, event deduplication, occurrence, and retry behavior require deterministic tests.
+- Test BLE through a contract/fake adapter; critical journeys still require physical-device verification.
+- Test database migrations against the previous database version and existing representative data.
+- Test Supabase policies/RLS with realistic roles, not only with a privileged client.
+- Tests must not depend on real time, global order, public networks, or undeclared hardware.
 
-Detail ada di `docs/engineering/testing-strategy.md`.
+See `docs/engineering/testing-strategy.md` for details.
 
 ## Quality gates
 
-Setelah app di-scaffold, command kanonis adalah:
+After the app has been scaffolded, the canonical command is:
 
 ```bash
 npm run check
 ```
 
-Command tersebut harus menjalankan format check, lint, TypeScript typecheck, unit/component tests, dan React diagnostics. Jalankan test tambahan sesuai risk matrix task. Jangan menyatakan selesai jika check yang diwajibkan gagal atau belum dijalankan; laporkan alasannya secara eksplisit.
+The command must run formatting checks, lint, TypeScript type checking, unit/component tests, and React diagnostics. Run additional tests according to the task risk matrix. Do not claim completion when a required check has failed or has not run; report the reason explicitly.
 
 ## Git, parallel work, and handoff
 
-- Satu task menggunakan satu branch atau worktree dan satu task brief.
-- Jangan mengedit file yang sama secara paralel tanpa pembagian ownership yang jelas.
-- Commit harus kecil, kohesif, dan tidak mencampur refactor tidak terkait.
-- Sebelum handoff, perbarui task brief dengan status, keputusan, file berubah, verifikasi, blocker, dan next step yang konkret.
-- Handoff ideal berada pada commit yang dapat dibangun atau diuji. Jika tidak, tandai dengan jelas apa yang belum aman.
-- Agent penerima membaca diff dan menjalankan baseline checks sebelum melanjutkan.
-- Implementer tidak melakukan approval akhir sendiri; gunakan review terpisah untuk perubahan non-trivial.
+- One task uses one branch or worktree and one task brief.
+- Do not edit the same file in parallel without explicit ownership boundaries.
+- Keep commits small and cohesive; do not mix unrelated refactors.
+- Before handoff, update the task brief with status, decisions, changed files, verification, blockers, and a concrete next step.
+- A handoff should ideally point to a buildable or testable commit. If it does not, state clearly what is not yet safe.
+- The receiving agent reads the diff and runs baseline checks before continuing.
+- The implementer must not give final approval to their own non-trivial change; use a separate review.
 
 ## Documentation and decisions
 
-- Keputusan arsitektur lintas fitur membutuhkan ADR baru atau perubahan status ADR yang ada.
-- Jangan mengubah ADR accepted secara diam-diam melalui code.
-- Jika behavior produk berubah, perbarui PRD atau catat gap yang membutuhkan keputusan Product.
-- Dokumentasi harus menjelaskan alasan dan invariant; jangan menduplikasi detail yang dapat diperoleh langsung dari code.
+- Cross-feature architecture decisions require a new ADR or a reviewed status change to an existing ADR.
+- Do not silently contradict an Accepted ADR in code.
+- When product behavior changes, update the PRD or record a gap that requires a Product decision.
+- Documentation must explain rationale and invariants; do not duplicate details that can be read directly from code.
+- Follow `docs/engineering/language-policy.md`: engineering and agent-facing artifacts use English, while approved product and user-language exceptions remain in their intended language.
 
 ## Definition of Done
 
-Sebuah task hanya selesai jika memenuhi `docs/engineering/definition-of-done.md`, acceptance criteria task, seluruh quality gate yang relevan, dan review atas diff.
-
+A task is complete only when it satisfies `docs/engineering/definition-of-done.md`, its acceptance criteria, every relevant quality gate, and a review of the diff.

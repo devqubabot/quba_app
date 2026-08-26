@@ -1,6 +1,6 @@
 ## Outcome
 
-Jelaskan perubahan observable dan alasan task ini diperlukan.
+Describe the observable change and why this task is required.
 
 ## Scope
 
@@ -10,7 +10,7 @@ Jelaskan perubahan observable dan alasan task ini diperlukan.
 
 ## Changes
 
-- Perubahan utama.
+- Main change.
 
 ## Verification evidence
 
@@ -20,23 +20,22 @@ Jelaskan perubahan observable dan alasan task ini diperlukan.
 
 ## Risk and recovery
 
-- Risiko utama:
+- Primary risk:
 - Offline/retry behavior:
 - Migration/rollback or recovery path:
 - Known limitations:
 
 ## Definition of Done
 
-- [ ] Acceptance criteria terpenuhi.
-- [ ] Perubahan mengikuti architecture boundaries dan ADR.
-- [ ] Test membuktikan behavior/regression berisiko.
-- [ ] Quality checks lulus atau pengecualian dijelaskan.
-- [ ] Accessibility/localization/error states diperiksa jika relevan.
-- [ ] Security/privacy/data integrity diperiksa jika relevan.
-- [ ] Task brief dan dokumentasi diperbarui.
-- [ ] Tidak ada perubahan di luar scope yang tersembunyi.
+- [ ] Acceptance criteria are satisfied.
+- [ ] Changes follow architecture boundaries and Accepted ADRs.
+- [ ] Tests prove the behavior and relevant regressions.
+- [ ] Quality checks pass or exceptions are explained.
+- [ ] Accessibility, localization, and error states were checked where relevant.
+- [ ] Security, privacy, and data integrity were checked where relevant.
+- [ ] The task brief and documentation are updated.
+- [ ] No hidden out-of-scope changes are present.
 
 ## Reviewer focus
 
-Sebutkan bagian diff dan invariant yang paling membutuhkan perhatian reviewer.
-
+Identify the diff areas and invariants that need the most reviewer attention.

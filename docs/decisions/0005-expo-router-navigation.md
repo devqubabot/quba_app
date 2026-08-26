@@ -1,24 +1,23 @@
-# ADR 0005: Expo Router untuk navigasi
+# ADR 0005: Expo Router for navigation
 
 - Status: Accepted
-- Tanggal: 2026-08-27
+- Date: 2026-08-27
 
 ## Context
 
-Quba membutuhkan onboarding, auth, tab utama, nested detail, dan akses langsung ke active session. Navigasi harus konsisten dengan Expo tooling dan tetap dapat menggunakan React Navigation primitives ketika diperlukan.
+Quba requires onboarding, authentication, main tabs, nested details, and direct access to an active session. Navigation must align with Expo tooling while retaining access to React Navigation primitives when required.
 
 ## Decision
 
-Gunakan Expo Router sebagai public navigation architecture. Route files melakukan composition dan navigation concerns; business logic tetap berada di application/domain modules.
+Use Expo Router as the public navigation architecture. Route files handle composition and navigation concerns; business logic remains in application/domain modules.
 
 ## Consequences
 
-- Route group membedakan onboarding/auth dan signed-in experience.
-- Jangan memindahkan domain fetching, BLE calls, atau sync orchestration ke route components.
-- Custom navigator hanya ditambahkan jika Expo Router abstraction tidak memenuhi requirement dan keputusan dicatat.
-- Deep link dan protected route behavior wajib diuji.
+- Route groups distinguish onboarding/authentication from the signed-in experience.
+- Do not move domain fetching, BLE calls, or synchronization orchestration into route components.
+- Add a custom navigator only when the Expo Router abstraction cannot satisfy a requirement, and record the decision.
+- Deep links and protected-route behavior require tests.
 
 ## Alternatives considered
 
-- React Navigation configuration langsung: fleksibel, tetapi Expo Router memberi integrasi filesystem dan Expo yang lebih sesuai baseline.
-
+- Direct React Navigation configuration: flexible, but Expo Router provides filesystem integration and Expo alignment that better fit the baseline.

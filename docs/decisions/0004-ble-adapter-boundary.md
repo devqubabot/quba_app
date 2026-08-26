@@ -1,26 +1,25 @@
 # ADR 0004: BLE adapter boundary
 
 - Status: Accepted
-- Tanggal: 2026-08-27
+- Date: 2026-08-27
 
 ## Context
 
-BLE merupakan critical path dengan ketidakpastian hardware dan firmware. Library atau implementasi native mungkin perlu berubah setelah feasibility test. Domain dan UI tidak boleh terikat ke callback, error code, atau data shape milik vendor BLE.
+BLE is a critical path with hardware and firmware uncertainty. The library or native implementation may need to change after feasibility testing. Domain and UI must not depend on vendor BLE callbacks, error codes, or data shapes.
 
 ## Decision
 
-Definisikan port BLE/protocol pada application boundary. Implementasi awal direncanakan menggunakan `react-native-ble-plx` di dalam Expo Development Build. Native fallback atau Expo Module dapat mengganti adapter tanpa mengubah use case, domain, atau presentation.
+Define BLE/protocol ports at the application boundary. The initial implementation is expected to use `react-native-ble-plx` inside an Expo Development Build. A native fallback or Expo Module may replace the adapter without changing use cases, domain, or presentation.
 
 ## Consequences
 
-- Discovery, connection, permission, transport, framing, dan protocol semantics dipisahkan.
-- Vendor error diterjemahkan menjadi typed application error dan user-action category.
-- Fake/contract adapter tersedia untuk deterministic tests.
-- Verifikasi akhir tetap membutuhkan perangkat fisik dan firmware compatible.
-- Penambahan library BLE final menunggu feasibility spike dan dependency review.
+- Discovery, connection, permissions, transport, framing, and protocol semantics remain separate.
+- Vendor errors are translated into typed application errors and user-action categories.
+- A fake/contract adapter supports deterministic tests.
+- Final verification still requires physical devices and compatible firmware.
+- The final BLE library addition waits for a feasibility spike and dependency review.
 
 ## Alternatives considered
 
-- Memanggil BLE library dari screen/store: lebih cepat untuk demo, tetapi menciptakan coupling dan sulit diuji.
-- Custom native module sejak hari pertama: ditunda sampai capability gap terbukti.
-
+- Calling the BLE library from a screen/store: faster for a demo, but creates coupling and is difficult to test.
+- Custom native module from day one: deferred until a capability gap is proven.

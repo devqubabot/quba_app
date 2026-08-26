@@ -1,3 +1,3 @@
 # Application layer
 
-Tempat use case, ports, transaction boundaries, dan typed application outcomes. Layer ini boleh bergantung pada domain tetapi tidak pada presentation. Vendor SDK diakses melalui implementation di infrastructure.
+Contains use cases, ports, transaction boundaries, and typed application outcomes. This layer may depend on domain but not on presentation. Vendor SDKs are accessed through implementations in infrastructure.

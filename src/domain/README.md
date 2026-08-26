@@ -1,3 +1,3 @@
 # Domain layer
 
-Tempat named domain types dan pure business rules. Layer ini tidak boleh mengimpor React, Expo, React Native, Supabase, SQLite, BLE, atau vendor infrastructure lain.
+Contains named domain types and pure business rules. This layer must not import React, Expo, React Native, Supabase, SQLite, BLE, or any other infrastructure vendor.

@@ -1,6 +1,6 @@
 # Source boundaries
 
-Quba memakai dependency direction berikut:
+Quba uses the following dependency direction:
 
 ```text
 app/routes → presentation → application → domain
@@ -8,10 +8,10 @@ app/routes → presentation → application → domain
                   infrastructure
 ```
 
-- `app/` hanya menangani route composition dan navigation concern.
-- `presentation/` merender state dan mengirim intent ke application contracts.
-- `application/` mengorkestrasi use case, ports, transaction boundaries, dan typed outcomes.
-- `domain/` berisi rule murni tanpa React, Expo, database, network, atau BLE.
-- `infrastructure/` mengimplementasikan application ports dan menerjemahkan vendor errors.
+- `app/` handles only route composition and navigation concerns.
+- `presentation/` renders state and sends intent to application contracts.
+- `application/` orchestrates use cases, ports, transaction boundaries, and typed outcomes.
+- `domain/` contains pure rules without React, Expo, databases, networks, or BLE.
+- `infrastructure/` implements application ports and translates vendor errors.
 
-Folder feature dibuat ketika use case pertama membutuhkannya. Jangan membuat shared `utils` atau barrel export luas.
+Create feature folders when the first use case requires them. Do not create a shared `utils` dumping ground or broad barrel exports.

@@ -1,3 +1,3 @@
 # Infrastructure layer
 
-Tempat adapter untuk SQLite, Supabase, BLE, notifications, dan telemetry setelah port/application contract tersedia. Adapter harus memvalidasi payload boundary dan menerjemahkan vendor errors menjadi typed application errors.
+Contains adapters for SQLite, Supabase, BLE, notifications, and telemetry after a port/application contract exists. Adapters must validate boundary payloads and translate vendor errors into typed application errors.

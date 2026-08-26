@@ -1,4 +1,4 @@
-# QUBA-XXX: Judul task
+# QUBA-XXX: Task title
 
 - Status: proposed
 - Owner/implementer: unassigned
@@ -8,16 +8,16 @@
 
 ## Goal
 
-Outcome pengguna atau sistem yang harus tercapai.
+The user or system outcome that must be achieved.
 
 ## Non-goals
 
-- Hal yang sengaja tidak dikerjakan dalam task ini.
+- Work intentionally excluded from this task.
 
 ## Acceptance criteria
 
-- [ ] Given/When/Then atau hasil observable pertama.
-- [ ] Failure/offline/recovery behavior yang relevan.
+- [ ] First observable Given/When/Then result or equivalent outcome.
+- [ ] Relevant failure/offline/recovery behavior.
 
 ## Context and sources
 
@@ -33,28 +33,28 @@ Outcome pengguna atau sistem yang harus tercapai.
 
 ## Implementation plan
 
-1. Langkah pertama.
-2. Langkah berikutnya.
+1. First step.
+2. Next step.
 
 ## Risk and verification plan
 
 | Risk | Evidence/test required |
 |---|---|
-| Contoh: duplicate event memberi XP ganda | Idempotency integration test |
+| Example: a duplicate event awards XP twice | Idempotency integration test |
 
 ## Current status
 
-Ringkasan singkat kondisi saat ini. Perbarui pada checkpoint dan sebelum handoff.
+Concise summary of the current state. Update at checkpoints and before handoff.
 
 ## Decision log
 
-| Waktu | Keputusan | Alasan |
+| Time | Decision | Rationale |
 |---|---|---|
 | YYYY-MM-DD | - | - |
 
 ## Changed files
 
-| File/module | Perubahan |
+| File/module | Change |
 |---|---|
 | - | - |
 
@@ -62,17 +62,16 @@ Ringkasan singkat kondisi saat ini. Perbarui pada checkpoint dan sebelum handoff
 
 | Command/device/scenario | Result | Notes |
 |---|---|---|
-| Not run | - | Jelaskan alasan |
+| Not run | - | Explain why |
 
 ## Review findings
 
-- Belum direview.
+- Not reviewed.
 
 ## Known issues and blockers
 
-- Tidak ada / jelaskan blocker dan owner keputusan.
+- None / describe the blocker and decision owner.
 
 ## Handoff / exact next step
 
-Instruksi konkret agar agent berikutnya dapat melanjutkan tanpa mengulang discovery.
-
+Concrete instructions that let the next agent continue without repeating discovery.

@@ -8,100 +8,100 @@
 
 ## Goal
 
-Membuat source of truth, handoff protocol, dan objective quality contract agar agent yang berbeda dapat mengembangkan Quba App secara konsisten.
+Create the sources of truth, handoff protocol, and objective quality contract required for different agents to develop the Quba App consistently.
 
 ## Non-goals
 
-- Men-scaffold Expo application.
-- Memasang runtime dependencies.
-- Membuat project-local `quba-app-engineering` skill sebelum workflow stabil.
-- Mengunci detail BLE protocol yang masih menunggu hardware feasibility.
+- Scaffolding the Expo application.
+- Installing runtime dependencies.
+- Creating a project-local `quba-app-engineering` skill before the workflow stabilizes.
+- Locking BLE protocol details that still depend on hardware feasibility.
 
 ## Acceptance criteria
 
-- [x] Repository Git tersedia untuk versioning dan handoff.
-- [x] Root `AGENTS.md` mendefinisikan product invariant, architecture boundary, quality gate, serta handoff.
-- [x] Keputusan stack yang sudah disepakati tercatat sebagai ADR.
-- [x] Coding, testing, dan Definition of Done tersedia.
-- [x] Task/handoff dan pull-request template tersedia.
-- [x] CI memvalidasi foundation dan siap mengaktifkan `npm run check` setelah app di-scaffold.
-- [x] Foundation Pack direview dan diterima pemilik proyek.
+- [x] A Git repository is available for versioning and handoff.
+- [x] Root `AGENTS.md` defines product invariants, architecture boundaries, quality gates, and handoff requirements.
+- [x] Agreed stack decisions are recorded as ADRs.
+- [x] Coding, testing, and Definition of Done documents are available.
+- [x] Task/handoff and pull-request templates are available.
+- [x] CI validates the foundation and is ready to activate `npm run check` after application scaffolding.
+- [x] The project owner reviewed and accepted the Foundation Pack.
 
 ## Context and sources
 
-- PRD: seluruh MVP, terutama bagian 5, 10, 12, 13, 16, 18, 22, dan 23.
+- PRD: the full MVP, especially sections 5, 10, 12, 13, 16, 18, 22, and 23.
 - Related ADRs: ADR 0001-0005.
-- OpenAI Codex project guidance: `AGENTS.md`, repo-scoped instructions, and code review workflow.
+- OpenAI Codex project guidance: `AGENTS.md`, repository-scoped instructions, and the code-review workflow.
 
 ## Scope ownership
 
-- Root governance files, `docs/`, dan `.github/` foundation.
-- Tidak mengubah PRD atau product artifacts asli.
-- Tidak ada parallel implementation task.
+- Root governance files, the `docs/` tree, and the `.github/` foundation.
+- Does not modify the PRD or original product artifacts.
+- No parallel implementation task.
 
 ## Implementation plan
 
-1. Inisialisasi Git.
-2. Buat root source-of-truth dan agent contract.
-3. Rekam arsitektur serta ADR keputusan yang sudah diterima.
-4. Buat coding/testing/DoD dan task handoff protocol.
-5. Tambahkan PR template dan pre-scaffold-safe CI.
-6. Validasi cross-reference, Git state, dan isi dokumen.
+1. Initialize Git.
+2. Create the root source of truth and agent contract.
+3. Record the architecture and already-accepted decisions.
+4. Create coding/testing/Definition of Done and the task handoff protocol.
+5. Add a pull-request template and pre-scaffold-safe CI.
+6. Validate cross-references, Git state, and document contents.
 
 ## Risk and verification plan
 
 | Risk | Evidence/test required |
 |---|---|
-| Aturan terlalu abstrak sehingga agent berbeda tetap menyimpang | Review setiap invariant dan task template terhadap PRD |
-| CI gagal sebelum app ada | Workflow memiliki explicit pre-scaffold path |
-| Keputusan prematur mengunci hardware | Detail protocol tetap open dan native fallback dipertahankan |
-| Dokumen saling bertentangan | Link/status/terminology consistency audit |
+| Rules are too abstract, so different agents still diverge | Review every invariant and task template against the PRD |
+| CI fails before the app exists | Workflow has an explicit pre-scaffold path |
+| Premature decisions lock uncertain hardware | Protocol details remain open and a native fallback is preserved |
+| Documents contradict each other | Link/status/terminology consistency audit |
 
 ## Current status
 
-Foundation files sudah dibuat, validation pass selesai, dan Foundation Pack telah diterima pemilik proyek.
+Foundation files were created, validation passed, and the project owner accepted the Foundation Pack.
 
 ## Decision log
 
-| Waktu | Keputusan | Alasan |
+| Time | Decision | Rationale |
 |---|---|---|
-| 2026-08-27 | Foundation Pack berada dalam repository Quba App | Aturan, decisions, dan code harus versioned bersama |
-| 2026-08-27 | Critical invariant berada di `AGENTS.md` dan CI, bukan hanya skill | Instruksi wajib dan verifikasi harus tersedia untuk semua agent |
-| 2026-08-27 | Project-local skill ditunda | Workflow perlu distabilkan lebih dahulu agar skill tidak mengabadikan aturan prematur |
-| 2026-08-27 | CI app aktif otomatis setelah `package.json` tersedia | Foundation dapat direview sebelum scaffold tanpa false failure |
+| 2026-08-27 | Keep the Foundation Pack in the Quba App repository | Rules, decisions, and code must be versioned together |
+| 2026-08-27 | Put critical invariants in `AGENTS.md` and CI, not only in a skill | Mandatory instructions and verification must be available to every agent |
+| 2026-08-27 | Defer the project-local skill | The workflow should stabilize before a skill preserves premature rules |
+| 2026-08-27 | Activate app CI automatically when `package.json` exists | The Foundation Pack can be reviewed before scaffolding without false failures |
 
 ## Changed files
 
-| File/module | Perubahan |
+| File/module | Change |
 |---|---|
-| `AGENTS.md` | Agent contract repository-wide |
+| `AGENTS.md` | Repository-wide agent contract |
 | `README.md`, `.gitignore`, `.editorconfig` | Repository baseline |
-| `docs/architecture/` | System boundaries dan sync invariants |
+| `docs/architecture/` | System boundaries and sync invariants |
 | `docs/decisions/` | ADR 0001-0005 |
-| `docs/engineering/` | Coding, testing, dan DoD |
-| `docs/tasks/` | Task lifecycle dan handoff template |
-| `.github/` | Pull request template dan quality workflow |
+| `docs/engineering/` | Coding, testing, and Definition of Done |
+| `docs/tasks/` | Task lifecycle and handoff template |
+| `.github/` | Pull-request template and quality workflow |
 
 ## Verification evidence
 
 | Command/device/scenario | Result | Notes |
 |---|---|---|
-| `git status --short --branch` dan file inventory | Pass | Repository aktif pada branch `main`; seluruh perubahan foundation masih uncommitted untuk direview |
-| Required foundation contract check | Pass | Semua file wajib tersedia dan tidak kosong |
-| Markdown relative-link audit | Pass | 18 file Markdown diperiksa; tidak ada relative link rusak |
-| YAML parse `.github/workflows/quality.yml` | Pass | Workflow valid secara syntax YAML |
-| Trailing-whitespace audit | Pass | Tidak ditemukan trailing whitespace |
-| Expo/app tests | N/A | App belum di-scaffold |
+| `git status --short --branch` and file inventory | Pass | Repository active on branch `main`; all foundation changes remained uncommitted for review |
+| Required foundation contract check | Pass | Every required file existed and was non-empty |
+| Markdown relative-link audit | Pass | 18 Markdown files checked; no broken relative links |
+| YAML parse for `.github/workflows/quality.yml` | Pass | Workflow was valid YAML |
+| Trailing-whitespace audit | Pass | No trailing whitespace found |
+| Expo/app tests | N/A | App had not been scaffolded |
 
 ## Review findings
 
-- Direview dan diterima oleh pemilik proyek pada 2026-08-27 tanpa perubahan tambahan.
+- Reviewed and accepted by the project owner on 2026-08-27 without additional changes.
 
 ## Known issues and blockers
 
-- Hardware capability dan BLE protocol masih open sesuai PRD.
-- Package manager/runtime/tool versions baru menjadi executable setelah scaffold.
+- Hardware capabilities and the BLE protocol remain open as defined by the PRD.
+- Package-manager/runtime/tool versions become executable only after scaffolding.
 
 ## Handoff / exact next step
 
-Scaffold Expo Development Build di repository ini, lalu buat task baru untuk executable quality tooling dan project structure.
+Scaffold an Expo Development Build in this repository, then create a new task for executable quality tooling and project structure.

@@ -1,25 +1,24 @@
-# ADR 0001: React Native dengan Expo Development Build
+# ADR 0001: React Native with Expo Development Builds
 
 - Status: Accepted
-- Tanggal: 2026-08-27
+- Date: 2026-08-27
 
 ## Context
 
-Quba membutuhkan satu codebase mobile untuk iOS dan Android, UI yang cepat diiterasi, akses BLE/native capability, SQLite, notifications, dan pengujian pada perangkat fisik. Expo Go saja tidak dapat menjadi runtime utama karena BLE membutuhkan native module.
+Quba requires one mobile codebase for iOS and Android, fast UI iteration, access to BLE/native capabilities, SQLite, notifications, and physical-device testing. Expo Go cannot be the primary runtime because BLE requires a native module.
 
 ## Decision
 
-Gunakan React Native, TypeScript strict, dan Expo Development Build. Native project dihasilkan/dikelola melalui Expo tooling, dengan custom native module hanya jika capability tidak dapat dipenuhi secara aman oleh library yang tersedia.
+Use React Native, strict TypeScript, and Expo Development Builds. Generate and manage native projects through Expo tooling; add a custom native module only when available libraries cannot safely provide a required capability.
 
 ## Consequences
 
-- Iterasi JavaScript/TypeScript dan distribusi development build tetap cepat.
-- Build iOS dan Android serta native permission harus menjadi bagian dari verification matrix.
-- Perubahan native config harus reproducible melalui app config/config plugin; hindari edit generated native files tanpa alasan terdokumentasi.
-- Expo Go boleh digunakan hanya untuk flow yang tidak membutuhkan native dependency dan tidak menjadi bukti akhir BLE.
+- JavaScript/TypeScript iteration and development-build distribution remain fast.
+- iOS and Android builds and native permissions must be part of the verification matrix.
+- Native configuration changes must be reproducible through app config/config plugins; avoid editing generated native files without a documented reason.
+- Expo Go may be used only for flows without native dependencies and is not final evidence for BLE.
 
 ## Alternatives considered
 
-- Flutter: tooling dan UI konsisten, tetapi tidak dipilih karena ekosistem/team direction Quba menggunakan React/TypeScript.
-- Bare React Native sejak awal: memberi kontrol penuh, tetapi menambah beban native sebelum kebutuhan membenarkannya.
-
+- Flutter: consistent tooling and UI, but not selected because the Quba ecosystem/team direction uses React/TypeScript.
+- Bare React Native from the beginning: offers full control, but adds native maintenance before requirements justify it.

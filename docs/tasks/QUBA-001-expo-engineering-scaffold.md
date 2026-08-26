@@ -8,143 +8,143 @@
 
 ## Goal
 
-Menyediakan scaffold aplikasi Quba berbasis Expo Development Build yang dapat dijalankan pada iOS dan Android, memakai Expo Router serta TypeScript strict, dan memiliki quality tooling executable untuk formatting, lint, types, tests, React diagnostics, dan kesehatan konfigurasi Expo.
+Provide a Quba application scaffold based on Expo Development Builds that can run on iOS and Android, uses Expo Router and strict TypeScript, and includes executable quality tooling for formatting, lint, types, tests, React diagnostics, and Expo configuration health.
 
 ## Non-goals
 
-- Mengimplementasikan fitur produk seperti auth, habit, activity, sync, BLE, SQLite, atau Supabase.
-- Menambahkan dependency native/domain yang belum diperlukan oleh shell aplikasi, termasuk BLE dan persistence.
-- Menghasilkan atau mengedit folder native `ios/` dan `android/` secara manual; task ini memakai Continuous Native Generation.
-- Menyiapkan credential, project, atau build berbayar di EAS.
-- Membuat project-local skill.
+- Implementing product features such as authentication, habits, activities, sync, BLE, SQLite, or Supabase.
+- Adding native/domain dependencies that the application shell does not yet require, including BLE and persistence.
+- Generating or manually editing `ios/` and `android/`; this task uses Continuous Native Generation.
+- Setting up credentials, an EAS project, or paid EAS builds.
+- Creating a project-local skill.
 
 ## Acceptance criteria
 
-- [x] Project memakai stable Expo SDK, React Native, Expo Router, `expo-dev-client`, dan TypeScript strict dengan versi yang kompatibel.
-- [x] `npm run ios`, `npm run android`, dan development server menargetkan development client, bukan menjadikan Expo Go sebagai runtime bukti akhir.
-- [x] Route awal dapat dirender dan presentation code tidak mengakses BLE, SQLite, atau Supabase.
-- [x] Struktur source mencatat dependency direction presentation/infrastructure ke application/domain tanpa membuat barrel export luas.
-- [x] `npm run check` menjalankan format check, ESLint, TypeScript, unit/component tests, dan React Doctor tanpa placeholder atau ketergantungan wajib pada jaringan publik.
-- [x] `npm run expo:doctor` tersedia dan lulus sebagai compatibility check eksplisit saat akses metadata Expo tersedia.
-- [x] CI menginstal dependency secara reproducible dan menjalankan command kanonis.
-- [x] Setup serta batas verifikasi native yang belum dijalankan didokumentasikan dengan jelas.
+- [x] The project uses compatible versions of stable Expo SDK, React Native, Expo Router, `expo-dev-client`, and strict TypeScript.
+- [x] `npm run ios`, `npm run android`, and the development server target a development client; Expo Go is not treated as final runtime evidence.
+- [x] The initial route renders and presentation code does not access BLE, SQLite, or Supabase.
+- [x] Source structure records the presentation/infrastructure-to-application/domain dependency direction without broad barrel exports.
+- [x] `npm run check` executes formatting checks, ESLint, TypeScript, unit/component tests, and React Doctor without placeholders or a mandatory public-network dependency.
+- [x] `npm run expo:doctor` is available and passes as an explicit compatibility check when Expo metadata is reachable.
+- [x] CI installs dependencies reproducibly and runs the canonical command.
+- [x] Setup and the limits of native verification that did not run are documented clearly.
 
 ## Context and sources
 
-- PRD: prinsip produk §5; architecture split §10; navigation §14; accessibility §15.3; NFR §16; Milestone 0-1 §22; Definition of Done §23.
-- Related ADRs: ADR 0001-0005 (seluruh ADR Accepted saat task dimulai).
-- Engineering contract: `AGENTS.md`, `docs/engineering/coding-standards.md`, `docs/engineering/testing-strategy.md`, dan `docs/engineering/definition-of-done.md`.
-- Official Expo references: project creation, Expo SDK reference, Expo Router installation, dan development build documentation.
+- PRD: product principles section 5; experience architecture section 10; navigation section 14; accessibility section 15.3; NFR section 16; Milestones 0-1 section 22; Definition of Done section 23.
+- Related ADRs: ADR 0001-0005 (all ADRs were Accepted when the task started).
+- Engineering contract: `AGENTS.md`, `docs/engineering/coding-standards.md`, `docs/engineering/testing-strategy.md`, and `docs/engineering/definition-of-done.md`.
+- Official Expo references: project creation, Expo SDK reference, Expo Router installation, and Development Build documentation.
 
 ## Scope ownership
 
-- Modules/files owned by this task: Expo/npm config, route shell, initial presentation shell, test/tooling config, CI app-quality job, README setup, dan task brief ini.
-- Shared boundaries/contracts: hanya dokumentasi layer awal; tidak ada domain/application port baru.
-- Known parallel tasks/conflicts: tidak ada parallel implementation task. Foundation Pack yang sudah direview dipertahankan.
+- Modules/files owned by this task: Expo/npm configuration, route shell, initial presentation shell, test/tooling configuration, CI app-quality job, README setup, and this task brief.
+- Shared boundaries/contracts: initial layer documentation only; no new domain/application port.
+- Known parallel tasks/conflicts: no parallel implementation task. The reviewed Foundation Pack is preserved.
 
 ## Implementation plan
 
-1. Kunci stable Expo baseline yang kompatibel dengan Node LTS dan rekam dependency rationale.
-2. Scaffold Expo Router + development client menggunakan Continuous Native Generation.
-3. Tambahkan source layout minimal yang menjaga architecture boundary dan copy terpisah dari rendering.
-4. Pasang formatter, lint, strict typecheck, Jest/RNTL, React Doctor, dan Expo Doctor sebagai executable local dependencies/scripts; network-backed Expo Doctor tetap terpisah dari deterministic canonical check.
-5. Tambahkan deterministic component smoke test serta enforcement dependency boundary pada lint config.
-6. Jalankan quality command, Expo config/prebuild checks yang aman, dan catat native verification yang belum tersedia.
-7. Audit diff, perbarui README/task brief, lalu serahkan untuk review terpisah.
+1. Lock a stable Expo baseline compatible with Node LTS and record dependency rationale.
+2. Scaffold Expo Router and a development client using Continuous Native Generation.
+3. Add a minimal source layout that preserves architecture boundaries and separates copy from rendering.
+4. Install formatter, lint, strict typecheck, Jest/RNTL, React Doctor, and Expo Doctor as executable local dependencies/scripts; keep network-backed Expo Doctor separate from the deterministic canonical check.
+5. Add a deterministic component smoke test and enforce dependency boundaries in lint configuration.
+6. Run the quality command and safe Expo configuration/prebuild checks, then record unavailable native verification.
+7. Audit the diff, update README/task brief, and hand off for separate review.
 
 ## Dependency review
 
 ### Runtime baseline
 
-- Expo SDK/React Native/React/Expo Router: stack yang diwajibkan ADR 0001 dan 0005; dipilih dari stable SDK resmi terbaru dan dipasang dalam versi kompatibel yang dihasilkan Expo tooling.
-- `expo-dev-client`: menyelesaikan kebutuhan native-capable development runtime; Expo Go ditolak karena tidak dapat membuktikan flow BLE/native.
-- Expo Router peer/runtime packages (`expo-constants`, `expo-linking`, status bar, screens, safe area, gesture handler, Reanimated, Worklets, React DOM, dan React Native Web): diperlukan oleh navigation/universal baseline resmi dan dipertahankan sesuai matriks kompatibilitas Expo. Dampaknya adalah native/bundle surface awal yang lebih besar, tetapi menghindari peer drift dan dapat diaudit ulang setelah route architecture stabil.
-- Alternatif bare React Native ditolak sesuai ADR 0001 karena menambah native maintenance sebelum diperlukan.
+- Expo SDK/React Native/React/Expo Router: required by ADR 0001 and ADR 0005; selected from the latest official stable SDK and installed in compatible versions generated by Expo tooling.
+- `expo-dev-client`: provides the native-capable development runtime; Expo Go was rejected because it cannot prove BLE/native flows.
+- Expo Router peer/runtime packages (`expo-constants`, `expo-linking`, status bar, screens, safe area, gesture handler, Reanimated, Worklets, React DOM, and React Native Web): required by the official navigation/universal baseline and kept aligned with Expo's compatibility matrix. They increase the initial native/bundle surface but prevent peer drift and can be audited after route architecture stabilizes.
+- Bare React Native was rejected according to ADR 0001 because it adds native maintenance before requirements justify it.
 
 ### Development tooling
 
-- ESLint 9 + Expo config: static correctness dan boundary restrictions menggunakan toolchain Expo. ESLint 10 belum dipakai karena peer plugin Expo SDK 57 belum mendukung major tersebut.
-- Prettier: deterministic formatting tanpa mengubah dokumen Foundation yang telah direview.
-- TypeScript: strict compile-time contract.
-- Jest + `jest-expo` + React Native Testing Library: component behavior smoke test pada level terendah yang relevan.
-- React Doctor: React diagnostics yang diwajibkan quality contract.
-- Expo Doctor: memverifikasi dependency compatibility dan app configuration.
-- Semua tooling dikunci di lockfile, hanya berjalan saat development/CI, dan dapat dihapus tanpa memengaruhi format data/runtime app.
+- ESLint 9 + Expo config: static correctness and boundary restrictions using the Expo toolchain. ESLint 10 was not used because Expo SDK 57 peer plugins did not yet support that major version.
+- Prettier: deterministic source formatting without rewriting reviewed Foundation documents.
+- TypeScript: strict compile-time contracts.
+- Jest + `jest-expo` + React Native Testing Library: component behavior smoke tests at the lowest relevant level.
+- React Doctor: React diagnostics required by the quality contract.
+- Expo Doctor: validates dependency compatibility and application configuration.
+- All tooling is locked in the lockfile, runs only during development/CI, and can be removed without affecting runtime data formats.
 
 ## Risk and verification plan
 
 | Risk | Evidence/test required |
 |---|---|
-| Dependency Expo/React Native tidak selaras | `expo-doctor` dan install reproducible dari lockfile |
-| Development build tidak benar-benar terkonfigurasi | `expo-dev-client` terpasang, app config memiliki scheme/bundle identifiers, dan Expo config dapat dievaluasi |
-| Route shell gagal render atau tidak accessible | Jest/RNTL smoke test berbasis role dan visible copy |
-| Boundary arsitektur terlanggar sejak awal | ESLint restricted-import rules untuk domain serta presentation route/screen |
-| Quality command hanya placeholder atau membutuhkan global tool | Semua subcommand berasal dari dependency lokal dan `npm run check` lulus |
-| CI test bergantung pada public metadata API | Expo Doctor executable tetapi dijalankan terpisah dari canonical deterministic check |
-| Native build tidak tersedia di host | Jalankan config/prebuild dry validation; catat iOS/Android device build sebagai pending, bukan pass |
+| Expo/React Native dependencies are misaligned | `expo-doctor` and reproducible lockfile install |
+| Development Build is not actually configured | `expo-dev-client` installed, scheme/bundle identifiers present, and Expo config evaluates |
+| Route shell fails to render or is inaccessible | Jest/RNTL smoke test using roles and visible copy |
+| Architecture boundary is violated from the beginning | ESLint restricted-import rules for domain and presentation route/screen code |
+| Quality command is a placeholder or requires a global tool | Every subcommand comes from a local dependency and `npm run check` passes |
+| CI tests depend on public metadata APIs | Expo Doctor remains executable but separate from the canonical deterministic check |
+| Native build is unavailable on the host | Run config/bundle validation; record iOS/Android device builds as pending, not passing |
 
 ## Current status
 
-Implementasi selesai dan siap review terpisah. Scaffold memakai Expo SDK 57, React Native 0.86.2, React 19.2.3, Expo Router, `expo-dev-client`, CNG, dan Node 22. Quality command serta clean lockfile install lulus; bundle JavaScript/Hermes berhasil dibuat untuk iOS dan Android. Native compilation/device runtime belum dijalankan karena host tidak memiliki full Xcode, Java/Android SDK, CocoaPods, atau device toolchain.
+Implementation is complete and ready for separate review. The scaffold uses Expo SDK 57, React Native 0.86.2, React 19.2.3, Expo Router, `expo-dev-client`, CNG, and Node 22. The quality command and clean lockfile install pass; JavaScript/Hermes bundles were produced successfully for iOS and Android. Native compilation/device runtime was not run because the host lacks full Xcode, Java/Android SDK, CocoaPods, and device tooling.
 
 ## Decision log
 
-| Waktu | Keputusan | Alasan |
+| Time | Decision | Rationale |
 |---|---|---|
-| 2026-08-27 | Gunakan branch `quba-001-expo-engineering-scaffold` | Memisahkan task scaffold dari Foundation Pack sesuai kontrak handoff |
-| 2026-08-27 | Target stable Expo SDK 57 dan Node 22 | Dokumentasi resmi Expo mencatat SDK 57 sebagai stable terbaru dengan minimum Node 22.13 |
-| 2026-08-27 | Gunakan CNG; jangan commit generated native directories pada scaffold | Native config harus reproducible melalui app config sesuai ADR 0001 |
-| 2026-08-27 | Tunda BLE, SQLite, dan Supabase dependencies | Task belum memiliki use case/contract yang membutuhkan vendor implementation tersebut |
-| 2026-08-27 | Jangan aktifkan React Compiler pada scaffold | Belum ada profiling/render evidence yang membenarkan optimization; lint rules tetap tersedia dari Expo config |
-| 2026-08-27 | Pin peer runtime sesuai default Expo SDK 57 template | Minimal install membuat npm memilih React DOM/Worklets yang tidak selaras; official template versions menghilangkan peer conflict |
-| 2026-08-27 | Gunakan Jest 29 dan ESLint 9 yang dipilih/didukung Expo | Latest Jest 30.4 gagal di `jest-expo`; plugin Expo belum mendukung ESLint 10 |
-| 2026-08-27 | Jalankan Expo Doctor di luar `npm run check` | Schema/RN Directory checks membutuhkan public API, sedangkan canonical tests harus deterministic tanpa public network |
-| 2026-08-27 | Jangan menjalankan `react-doctor install` | Dependency/script cukup untuk diagnostics dan user secara eksplisit menunda project-local skill |
+| 2026-08-27 | Use branch `quba-001-expo-engineering-scaffold` | Separates the scaffold task from the Foundation Pack according to the handoff contract |
+| 2026-08-27 | Target stable Expo SDK 57 and Node 22 | Official Expo documentation lists SDK 57 as the latest stable release with Node 22.13 minimum |
+| 2026-08-27 | Use CNG and do not commit generated native directories | Native configuration must be reproducible through app config under ADR 0001 |
+| 2026-08-27 | Defer BLE, SQLite, and Supabase dependencies | No current use case/contract requires those vendor implementations |
+| 2026-08-27 | Do not enable React Compiler in the scaffold | No profiling/render evidence justifies the optimization; Expo config still provides its lint rules |
+| 2026-08-27 | Pin peer runtime versions from the default Expo SDK 57 template | A minimal install selected incompatible React DOM/Worklets peers; official template versions removed the conflict |
+| 2026-08-27 | Use Expo-selected Jest 29 and supported ESLint 9 | Latest Jest 30.4 failed with `jest-expo`; Expo plugins did not support ESLint 10 |
+| 2026-08-27 | Keep Expo Doctor outside `npm run check` | Schema/RN Directory checks require public APIs, while canonical tests must be deterministic without a public network |
+| 2026-08-27 | Do not run `react-doctor install` | The dependency/script is sufficient for diagnostics and the user explicitly deferred a project-local skill |
 
 ## Changed files
 
-| File/module | Perubahan |
+| File/module | Change |
 |---|---|
-| `package.json`, `package-lock.json`, `.nvmrc` | Expo/runtime/tooling dependency, scripts, Node contract, dan reproducible lockfile |
-| `app.json` | Quba app identity, native identifiers, Router, dan development client config plugin |
-| `src/app/` | Expo Router root layout dan thin route composition |
-| `src/presentation/` | Accessible, light/dark-aware scaffold screen, localized copy source, dan component smoke test |
-| `src/{application,domain,infrastructure}/README.md`, `src/README.md` | Initial dependency boundaries tanpa placeholder business code atau barrel export |
-| `eslint.config.js`, `jest.config.js`, `tsconfig.json` | Boundary lint, Jest/Expo mapping, dan strict TypeScript config |
-| `.github/workflows/quality.yml` | Mengaktifkan clean install dan canonical quality command tanpa pre-scaffold skip |
-| `.gitignore` | Mengabaikan CNG-generated native folders dan Expo generated types |
-| `README.md` | Development Build setup, quality command, dan deferred integration scope |
-| `docs/tasks/QUBA-001-expo-engineering-scaffold.md` | Task contract, decision record, verification, dan handoff |
+| `package.json`, `package-lock.json`, `.nvmrc` | Expo/runtime/tooling dependencies, scripts, Node contract, and reproducible lockfile |
+| `app.json` | Quba application identity, native identifiers, Router, and development-client config plugin |
+| `src/app/` | Expo Router root layout and thin route composition |
+| `src/presentation/` | Accessible light/dark-aware scaffold screen, localized copy source, and component smoke test |
+| `src/{application,domain,infrastructure}/README.md`, `src/README.md` | Initial dependency boundaries without placeholder business code or barrel exports |
+| `eslint.config.js`, `jest.config.js`, `tsconfig.json` | Boundary lint, Jest/Expo mapping, and strict TypeScript configuration |
+| `.github/workflows/quality.yml` | Clean install and canonical quality command without a pre-scaffold skip |
+| `.gitignore` | Ignores CNG-generated native folders and Expo-generated types |
+| `README.md` | Development Build setup, quality command, and deferred integration scope |
+| `docs/tasks/QUBA-001-expo-engineering-scaffold.md` | Task contract, decision record, verification, and handoff |
 
 ## Verification evidence
 
 | Command/device/scenario | Result | Notes |
 |---|---|---|
-| `npm ci` | Pass | Clean install dari lockfile: 1,194 packages installed |
-| `npm run check` | Pass | Prettier, ESLint (zero warning), TypeScript strict, Jest/RNTL 1/1 test, dan React Doctor no issues |
-| `npx react-doctor@latest --verbose --scope changed` | Pass | Full fallback scan karena repository belum memiliki commit; score 100/100, no issues |
-| `npm run expo:doctor` | Pass | 21/21 Expo config/dependency checks dengan metadata online |
-| `npm run config` | Pass | Expo SDK 57 config resolved; scheme `quba`, iOS/Android identifiers, Router dan dev-client plugins tersedia |
-| `expo export --platform ios` | Pass | iOS Hermes bundle berhasil dibuat di temporary output |
-| `expo export --platform android` | Pass | Android Hermes bundle berhasil dibuat di temporary output |
-| `npm start -- --offline` | Partial / intentionally stopped | Development-client server mencapai project startup lalu dihentikan dengan SIGINT; tidak ada device attach |
-| Full iOS native build/device | Not run | Full Xcode/CocoaPods/device toolchain tidak tersedia pada host |
-| Full Android native build/device | Not run | Java/Android SDK/ADB/device toolchain tidak tersedia pada host |
-| `npm audit --omit=dev` | Known warning | 10 moderate paths berasal dari Expo build tooling `xcode -> uuid@7`; suggested force fix mendowngrade Expo ke 46 sehingga tidak aman diterapkan |
+| `npm ci` | Pass | Clean lockfile install: 1,194 packages installed |
+| `npm run check` | Pass | Prettier, ESLint with zero warnings, strict TypeScript, Jest/RNTL 1/1 test, and React Doctor with no issues |
+| `npx react-doctor@latest --verbose --scope changed` | Pass | Full fallback scan because the repository had no commit; score 100/100, no issues |
+| `npm run expo:doctor` | Pass | 21/21 Expo config/dependency checks with online metadata |
+| `npm run config` | Pass | Expo SDK 57 config resolved; `quba` scheme, iOS/Android identifiers, Router, and dev-client plugins available |
+| `expo export --platform ios` | Pass | iOS Hermes bundle produced in temporary output |
+| `expo export --platform android` | Pass | Android Hermes bundle produced in temporary output |
+| `npm start -- --offline` | Partial / intentionally stopped | Development-client server reached project startup and was stopped with SIGINT; no device attached |
+| Full iOS native build/device | Not run | Full Xcode/CocoaPods/device toolchain unavailable on host |
+| Full Android native build/device | Not run | Java/Android SDK/ADB/device toolchain unavailable on host |
+| `npm audit --omit=dev` | Known warning | 10 moderate paths originate from Expo build tooling `xcode -> uuid@7`; the suggested force fix downgrades Expo to 46 and is unsafe |
 
 ## Review findings
 
-- Belum direview; implementer tidak memberi approval akhir sendiri. Task tetap `in_review` walaupun implementation checks lulus.
+- Not reviewed; the implementer cannot provide final approval. The task remains `in_review` even though implementation checks pass.
 
 ## Known issues and blockers
 
-- Build dan runtime pada physical iOS/Android memerlukan native toolchain/device dan tetap harus dilakukan sebelum milestone yang mengandalkan native behavior.
-- Detail BLE/native permission tetap menunggu hardware feasibility; sengaja tidak dikunci di task ini.
-- Native identifiers `com.quba.app` adalah scaffold baseline dan harus dikonfirmasi terhadap ownership/signing sebelum EAS atau store setup.
-- `npm audit` melaporkan advisory moderate pada transitive Expo build-tool path `xcode -> uuid@7`. Tidak ada non-breaking resolution yang ditawarkan; jangan memakai `npm audit fix --force` karena resolver mengusulkan downgrade Expo 57 ke 46.
-- ESLint 9 mengeluarkan upstream deprecation notice setelah ESLint 10 dirilis, tetapi Expo SDK 57 masih memiliki plugin peer range sampai ESLint 9. Upgrade menunggu toolchain Expo mendukung major 10.
-- Foundation Pack dan scaffold belum memiliki baseline commit; branch memuat staged Foundation files serta unstaged QUBA-001 changes secara eksplisit.
+- Physical iOS/Android build and runtime require native toolchains/devices and remain required before a milestone that depends on native behavior.
+- BLE/native permission details still depend on hardware feasibility and are intentionally not locked here.
+- Native identifiers `com.quba.app` are scaffold baselines and must be confirmed against ownership/signing before EAS or store setup.
+- `npm audit` reports a moderate advisory on the transitive Expo build-tool path `xcode -> uuid@7`. No non-breaking resolution is offered; do not use `npm audit fix --force` because it proposes downgrading Expo 57 to 46.
+- ESLint 9 emits an upstream deprecation notice after ESLint 10 was released, but Expo SDK 57 plugin peer ranges still stop at ESLint 9. Upgrade when the Expo toolchain supports major 10.
+- QUBA-000 and QUBA-001 now have separate bootstrap commits; QUBA-001 still requires independent review and native-device evidence before it can move from `in_review` to `done`.
 
 ## Handoff / exact next step
 
-Reviewer terpisah membaca Foundation baseline dan diff QUBA-001, menjalankan `npm ci && npm run check`, lalu memvalidasi satu local Development Build pada iOS atau Android yang memiliki toolchain. Setelah findings selesai dan bukti native dicatat, ubah task menjadi `done`; task fitur pertama berikutnya sebaiknya mendefinisikan application/domain contract sebelum menambahkan SQLite, Supabase, atau BLE adapter.
+A separate reviewer reads the QUBA-000 baseline and QUBA-001 scaffold commit, runs `npm ci && npm run check`, and validates one local Development Build on an iOS or Android environment with a native toolchain. After resolving findings and recording native evidence, change the task to `done`. The next feature task should define an application/domain contract before adding a SQLite, Supabase, or BLE adapter.

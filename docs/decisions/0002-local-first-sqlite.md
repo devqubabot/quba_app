@@ -1,25 +1,24 @@
-# ADR 0002: Local-first dengan SQLite
+# ADR 0002: Local-first with SQLite
 
 - Status: Accepted
-- Tanggal: 2026-08-27
+- Date: 2026-08-27
 
 ## Context
 
-Quba harus tetap berguna ketika internet tidak tersedia dan harus dapat terhubung langsung ke robot. Sync yang tertunda atau gagal tidak boleh menghilangkan progres maupun membuat UI kosong.
+Quba must remain useful when the internet is unavailable and must connect directly to the robot. Delayed or failed synchronization must not lose progress or leave the UI empty.
 
 ## Decision
 
-Gunakan SQLite sebagai operational source untuk state aplikasi pada perangkat. Use case lokal menulis ke database lokal lebih dahulu dan cloud synchronization diproses sebagai pekerjaan retryable. Schema berubah melalui migration forward-only.
+Use SQLite as the operational source for application state on the device. Local use cases write to the local database first, while cloud synchronization runs as retryable work. Schema changes use forward-only migrations.
 
 ## Consequences
 
-- UI membaca state lokal dan tidak menunggu network request untuk data yang sudah dimiliki.
-- Mutation membutuhkan sync metadata/outbox yang eksplisit.
-- Conflict, retry, tombstone, migration, dan recovery menjadi bagian domain yang harus diuji.
-- Data autentikasi sensitif tetap disimpan di secure storage, bukan SQLite biasa.
+- UI reads local state and does not wait for a network request when data is already available.
+- Mutations require explicit sync metadata/outbox records.
+- Conflict, retry, tombstone, migration, and recovery behavior become tested domain concerns.
+- Sensitive authentication data remains in secure storage, not plain SQLite.
 
 ## Alternatives considered
 
-- Cloud-first cache: lebih sederhana pada awalnya tetapi bertentangan dengan offline behavior dan direct robot sync.
-- Key-value storage sebagai database utama: tidak cocok untuk relasi occurrence, events, ledger, dan query progres.
-
+- Cloud-first cache: initially simpler, but conflicts with offline behavior and direct robot synchronization.
+- Key-value storage as the primary database: unsuitable for occurrence relations, events, ledger entries, and progress queries.

@@ -30,6 +30,7 @@ jobs:
             "docs/architecture/overview.md"
             "docs/decisions/README.md"
             "docs/engineering/coding-standards.md"
+            "docs/engineering/language-policy.md"
             "docs/engineering/testing-strategy.md"
             "docs/engineering/definition-of-done.md"
             "docs/tasks/TEMPLATE.md"

@@ -1,57 +1,57 @@
 # Quba App
 
-Quba adalah aplikasi pendamping robot Quba untuk merencanakan kebiasaan, menjalankan aktivitas minim distraksi, menyinkronkan event offline dari robot, dan merefleksikan progres pengguna.
+Quba is the companion application for the Quba robot. It helps users plan habits, run low-distraction activities, synchronize offline robot events, and reflect on their progress.
 
-Repository ini memuat source code Quba App sekaligus engineering governance yang harus mengikuti versi codebase yang sama.
+This repository contains the Quba App source code and the engineering governance that must evolve with the same codebase version.
 
 ## Status
 
-Engineering scaffold tersedia pada Expo SDK 57 dengan Expo Router, Development Build, TypeScript strict, dan executable quality gates. Fitur produk belum diimplementasikan.
+The engineering scaffold is available on Expo SDK 57 with Expo Router, Development Builds, strict TypeScript, and executable quality gates. Product features have not yet been implemented.
 
-## Sumber kebenaran
+## Sources of truth
 
-Urutan sumber konteks proyek:
+Use project context in this order:
 
-1. [Product Requirements Document](./QUBA_PRD_MVP_v1.0.md) untuk kebutuhan dan acceptance criteria produk.
-2. [AGENTS.md](./AGENTS.md) untuk aturan kerja wajib manusia dan coding agent.
-3. [Architecture overview](./docs/architecture/overview.md) untuk batas sistem dan dependency.
-4. [Architecture Decision Records](./docs/decisions/README.md) untuk keputusan teknis yang telah diterima.
-5. [Task briefs](./docs/tasks/README.md) untuk scope dan status pekerjaan aktif.
+1. [Product Requirements Document](./QUBA_PRD_MVP_v1.0.md) for product requirements and acceptance criteria. The current PRD is intentionally maintained in Indonesian.
+2. [AGENTS.md](./AGENTS.md) for mandatory rules for humans and coding agents.
+3. [Architecture overview](./docs/architecture/overview.md) for system boundaries and dependency direction.
+4. [Architecture Decision Records](./docs/decisions/README.md) for accepted technical decisions.
+5. [Task briefs](./docs/tasks/README.md) for active work scope and status.
 
-Jika dokumen bertentangan, hentikan implementasi terkait dan selesaikan konflik melalui perubahan PRD atau ADR yang eksplisit.
+If these documents conflict, stop the affected implementation and resolve the conflict through an explicit PRD or ADR change.
 
-## Keputusan stack awal
+## Initial stack decisions
 
-- React Native dengan Expo Development Build dan TypeScript.
-- Expo Router untuk navigasi aplikasi.
-- SQLite sebagai operational store lokal aplikasi.
-- Supabase untuk autentikasi dan backend cloud.
-- BLE melalui adapter boundary; implementasi awal direncanakan memakai `react-native-ble-plx` dan dapat diganti tanpa mengubah domain/UI.
-- Arsitektur local-first dengan event aktivitas append-only dan sinkronisasi idempotent.
+- React Native with Expo Development Builds and TypeScript.
+- Expo Router for application navigation.
+- SQLite as the application's local operational store.
+- Supabase for authentication and the cloud backend.
+- BLE behind an adapter boundary; the initial implementation is expected to use `react-native-ble-plx` and may be replaced without changing domain or UI code.
+- Local-first architecture with append-only activity events and idempotent synchronization.
 
 ## Workflow
 
-Setiap perubahan harus memiliki task brief, acceptance criteria, verifikasi, dan handoff yang dapat dibaca agent lain. Lihat [task workflow](./docs/tasks/README.md) dan [Definition of Done](./docs/engineering/definition-of-done.md).
+Every change requires a task brief, acceptance criteria, verification, and a handoff another agent can understand. See the [task workflow](./docs/tasks/README.md), [Definition of Done](./docs/engineering/definition-of-done.md), and [engineering language policy](./docs/engineering/language-policy.md).
 
 ## Local development
 
-Requirement: Node.js 22.13 atau lebih baru dalam major version 22, npm, dan native toolchain platform yang akan dijalankan.
+Requirements: Node.js 22.13 or newer within major version 22, npm, and the native toolchain for the target platform.
 
 ```bash
 npm ci
 npm run ios
-# atau
+# or
 npm run android
 ```
 
-Kedua command native menjalankan Expo prebuild saat folder generated native belum tersedia, lalu mengompilasi dan memasang development build. Setelah build terpasang, jalankan Metro dengan `npm start`. Expo Go bukan runtime verifikasi untuk flow native Quba.
+Both native commands run Expo prebuild when generated native folders are absent, then compile and install a development build. After the build is installed, start Metro with `npm start`. Expo Go is not a valid verification runtime for Quba native flows.
 
-Jalankan seluruh quality gate lokal melalui:
+Run every deterministic local quality gate with:
 
 ```bash
 npm run check
 ```
 
-Untuk compatibility check yang memakai metadata Expo/React Native Directory dan membutuhkan jaringan, jalankan `npm run expo:doctor` secara eksplisit.
+For a compatibility check that uses Expo and React Native Directory metadata and requires network access, run `npm run expo:doctor` explicitly.
 
-Build EAS, credential signing, BLE, SQLite, dan Supabase sengaja belum dikonfigurasi pada scaffold ini; masing-masing membutuhkan task dan dependency review tersendiri.
+EAS Build, signing credentials, BLE, SQLite, and Supabase are intentionally not configured in this scaffold. Each requires a dedicated task and dependency review.
