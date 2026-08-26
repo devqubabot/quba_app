@@ -24,3 +24,6 @@ android/app/build/
 # Local agent/session artifacts
 .codex-log/
 tmp/
+
+ui.example.jpeg
+quba.excalidraw
