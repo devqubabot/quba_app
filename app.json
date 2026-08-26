@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Quba",
+    "slug": "quba",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "quba",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "com.quba.app",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.quba.app",
+      "predictiveBackGestureEnabled": true
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-dev-client",
+        {
+          "launchMode": "most-recent"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

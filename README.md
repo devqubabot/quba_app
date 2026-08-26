@@ -6,7 +6,7 @@ Repository ini memuat source code Quba App sekaligus engineering governance yang
 
 ## Status
 
-Foundation phase. Source code Expo belum di-scaffold.
+Engineering scaffold tersedia pada Expo SDK 57 dengan Expo Router, Development Build, TypeScript strict, dan executable quality gates. Fitur produk belum diimplementasikan.
 
 ## Sumber kebenaran
 
@@ -33,3 +33,25 @@ Jika dokumen bertentangan, hentikan implementasi terkait dan selesaikan konflik 
 
 Setiap perubahan harus memiliki task brief, acceptance criteria, verifikasi, dan handoff yang dapat dibaca agent lain. Lihat [task workflow](./docs/tasks/README.md) dan [Definition of Done](./docs/engineering/definition-of-done.md).
 
+## Local development
+
+Requirement: Node.js 22.13 atau lebih baru dalam major version 22, npm, dan native toolchain platform yang akan dijalankan.
+
+```bash
+npm ci
+npm run ios
+# atau
+npm run android
+```
+
+Kedua command native menjalankan Expo prebuild saat folder generated native belum tersedia, lalu mengompilasi dan memasang development build. Setelah build terpasang, jalankan Metro dengan `npm start`. Expo Go bukan runtime verifikasi untuk flow native Quba.
+
+Jalankan seluruh quality gate lokal melalui:
+
+```bash
+npm run check
+```
+
+Untuk compatibility check yang memakai metadata Expo/React Native Directory dan membutuhkan jaringan, jalankan `npm run expo:doctor` secara eksplisit.
+
+Build EAS, credential signing, BLE, SQLite, dan Supabase sengaja belum dikonfigurasi pada scaffold ini; masing-masing membutuhkan task dan dependency review tersendiri.

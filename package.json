@@ -1,0 +1,55 @@
+{
+  "name": "quba-app",
+  "version": "0.1.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "engines": {
+    "node": ">=22.13 <23"
+  },
+  "scripts": {
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "config": "expo config --type public",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"*.{js,json,mjs,ts}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"*.{js,json,mjs,ts}\"",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "jest --ci --runInBand",
+    "doctor": "react-doctor --verbose",
+    "expo:doctor": "expo-doctor",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run doctor"
+  },
+  "dependencies": {
+    "expo": "~57.0.16",
+    "expo-constants": "~57.0.14",
+    "expo-dev-client": "~57.0.15",
+    "expo-linking": "~57.0.7",
+    "expo-router": "~57.0.16",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-gesture-handler": "~2.32.0",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-web": "~0.21.0",
+    "react-native-worklets": "0.10.1"
+  },
+  "devDependencies": {
+    "@testing-library/react-native": "^14.0.1",
+    "@types/jest": "29.5.14",
+    "@types/react": "~19.2.2",
+    "eslint": "9.39.5",
+    "eslint-config-expo": "~57.0.1",
+    "eslint-import-resolver-typescript": "3.10.1",
+    "expo-doctor": "1.20.3",
+    "jest": "~29.7.0",
+    "jest-expo": "~57.0.4",
+    "prettier": "3.9.6",
+    "react-doctor": "0.9.12",
+    "test-renderer": "1.2.0",
+    "typescript": "~6.0.3"
+  }
+}

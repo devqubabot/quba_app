@@ -51,24 +51,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        if: ${{ hashFiles('package.json') != '' }}
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
       - name: Require reproducible npm project
-        if: ${{ hashFiles('package.json') != '' }}
         shell: bash
         run: |
           test -f package-lock.json
           npm ci
 
       - name: Run canonical quality command
-        if: ${{ hashFiles('package.json') != '' }}
         run: npm run check
-
-      - name: Explain pre-scaffold state
-        if: ${{ hashFiles('package.json') == '' }}
-        run: echo "Expo app has not been scaffolded; app quality gates will activate when package.json exists."
-
