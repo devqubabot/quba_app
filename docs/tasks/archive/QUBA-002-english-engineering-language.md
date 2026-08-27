@@ -1,8 +1,8 @@
 # QUBA-002: English engineering and agent language
 
-- Status: in_review
+- Status: done
 - Owner/implementer: primary Codex agent
-- Reviewer: unassigned (must be separate from implementer)
+- Reviewer: project owner
 - Branch/worktree: `quba-001-expo-engineering-scaffold` (sequential bootstrap history; changes are separated by task commit)
 - Last updated: 2026-08-27 Asia/Jakarta
 
@@ -64,7 +64,7 @@ Make English the canonical language for engineering and agent-facing artifacts s
 
 ## Current status
 
-Migration is complete and ready for independent review. English is now canonical across the agent contract, developer entry points, architecture, all five Accepted ADRs, engineering standards, task workflow/templates/history, source-layer documentation, and the pull-request template. The Indonesian PRD and application copy were not modified. No runtime dependency or project-local skill was added.
+Migration and independent review are complete. English is now canonical across the agent contract, developer entry points, architecture, all five Accepted ADRs, engineering standards, task workflow/templates/history, source-layer documentation, and the pull-request template. The Indonesian PRD and application copy were not modified. No runtime dependency or project-local skill was added.
 
 ## Decision log
 
@@ -104,13 +104,14 @@ Migration is complete and ready for independent review. English is now canonical
 
 ## Review findings
 
-- Not reviewed; the implementer cannot provide final approval. The task remains `in_review` despite passing implementation checks.
+- The project owner reviewed and accepted the engineering-language migration on 2026-08-27.
+- No semantic drift or implementation changes were requested.
 
 ## Known issues and blockers
 
-- QUBA-000, QUBA-001, and QUBA-002 share the initial bootstrap branch but are separated into task-specific commits. Future tasks should use their own branch/worktree after this bootstrap history is reviewed.
+- QUBA-000, QUBA-001, and QUBA-002 share the accepted bootstrap history and are separated into task-specific commits. Future tasks use their own branch/worktree.
 - The current scaffold screen contains pre-existing mixed-language development copy (`Engineering foundation` plus Indonesian text). QUBA-002 intentionally did not rewrite user-facing copy; the first product UI task should replace scaffold copy through the localization contract.
 
 ## Handoff / exact next step
 
-A separate reviewer compares the translation commit against the QUBA-000/QUBA-001 history and product invariants, confirms that no Accepted decision changed meaning, and runs `npm run check`. After review findings are resolved, start feature work from a dedicated branch/worktree.
+Use the accepted English engineering vocabulary and start QUBA-003 from a dedicated branch/worktree.

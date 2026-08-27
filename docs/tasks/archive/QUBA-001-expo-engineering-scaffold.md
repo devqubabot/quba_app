@@ -1,8 +1,8 @@
 # QUBA-001: Expo Development Build and executable quality tooling
 
-- Status: in_review
+- Status: done
 - Owner/implementer: primary Codex agent
-- Reviewer: unassigned (must be separate from implementer)
+- Reviewer: project owner
 - Branch/worktree: `quba-001-expo-engineering-scaffold`
 - Last updated: 2026-08-27 Asia/Jakarta
 
@@ -85,7 +85,7 @@ Provide a Quba application scaffold based on Expo Development Builds that can ru
 
 ## Current status
 
-Implementation is complete and ready for separate review. The scaffold uses Expo SDK 57, React Native 0.86.2, React 19.2.3, Expo Router, `expo-dev-client`, CNG, and Node 22. The quality command and clean lockfile install pass; JavaScript/Hermes bundles were produced successfully for iOS and Android. Native compilation/device runtime was not run because the host lacks full Xcode, Java/Android SDK, CocoaPods, and device tooling.
+Implementation and independent review are complete. The scaffold uses Expo SDK 57, React Native 0.86.2, React 19.2.3, Expo Router, `expo-dev-client`, CNG, and Node 22. The quality command and clean lockfile install pass; JavaScript/Hermes bundles were produced successfully for iOS and Android. Native compilation/device runtime was not run because the host lacks full Xcode, Java/Android SDK, CocoaPods, and device tooling, so physical Development Build evidence remains a Milestone 1 gate rather than a claimed result of this task.
 
 ## Decision log
 
@@ -134,7 +134,9 @@ Implementation is complete and ready for separate review. The scaffold uses Expo
 
 ## Review findings
 
-- Not reviewed; the implementer cannot provide final approval. The task remains `in_review` even though implementation checks pass.
+- The project owner reviewed and accepted the scaffold on 2026-08-27.
+- No implementation changes were requested.
+- The reviewer accepted the recorded native-toolchain limitation; a local Development Build on real supported tooling remains required before Milestone 1 native behavior is accepted.
 
 ## Known issues and blockers
 
@@ -143,8 +145,9 @@ Implementation is complete and ready for separate review. The scaffold uses Expo
 - Native identifiers `com.quba.app` are scaffold baselines and must be confirmed against ownership/signing before EAS or store setup.
 - `npm audit` reports a moderate advisory on the transitive Expo build-tool path `xcode -> uuid@7`. No non-breaking resolution is offered; do not use `npm audit fix --force` because it proposes downgrading Expo 57 to 46.
 - ESLint 9 emits an upstream deprecation notice after ESLint 10 was released, but Expo SDK 57 plugin peer ranges still stop at ESLint 9. Upgrade when the Expo toolchain supports major 10.
-- QUBA-000 and QUBA-001 now have separate bootstrap commits; QUBA-001 still requires independent review and native-device evidence before it can move from `in_review` to `done`.
+- QUBA-000 and QUBA-001 have separate bootstrap commits.
+- Native-device evidence is still required before accepting Milestone 1 pairing or other native behavior; this scaffold task does not claim that evidence.
 
 ## Handoff / exact next step
 
-A separate reviewer reads the QUBA-000 baseline and QUBA-001 scaffold commit, runs `npm ci && npm run check`, and validates one local Development Build on an iOS or Android environment with a native toolchain. After resolving findings and recording native evidence, change the task to `done`. The next feature task should define an application/domain contract before adding a SQLite, Supabase, or BLE adapter.
+Use the accepted scaffold as the baseline for QUBA-003. Define and test the Golden Journey application/domain contract before adding a SQLite, Supabase, or BLE adapter. Record physical Development Build evidence when native behavior enters Milestone 1 scope.
