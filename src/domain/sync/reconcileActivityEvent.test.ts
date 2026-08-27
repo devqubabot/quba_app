@@ -317,6 +317,36 @@ describe("reconcileActivityEvent", () => {
 
   it.each([
     {
+      name: "missing activity run",
+      event: linkedEvent(),
+      state: context({ activityRun: null }),
+      code: "activity_run_not_found",
+    },
+    {
+      name: "cancelled activity run",
+      event: linkedEvent(),
+      state: context({ activityRun: linkedRun({ status: "cancelled" }) }),
+      code: "activity_run_not_accepting_progress",
+    },
+    {
+      name: "missing habit",
+      event: linkedEvent(),
+      state: context({ habit: null }),
+      code: "habit_not_found",
+    },
+    {
+      name: "missing occurrence",
+      event: linkedEvent(),
+      state: context({ occurrence: null }),
+      code: "occurrence_not_found",
+    },
+    {
+      name: "skipped occurrence",
+      event: linkedEvent(),
+      state: context({ occurrence: { ...occurrence, status: "skipped" } }),
+      code: "occurrence_unavailable",
+    },
+    {
       name: "mismatched occurrence",
       event: linkedEvent({ occurrenceId: occurrenceId("other-occurrence") }),
       state: context(),

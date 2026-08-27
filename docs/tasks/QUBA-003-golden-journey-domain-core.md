@@ -56,6 +56,7 @@ Provide framework-independent domain rules and an application transaction contra
 7. Snapshot the occurrence completion target so delayed events remain independent of later habit configuration changes.
 8. Reject impossible calendar timestamps instead of accepting JavaScript date normalization.
 9. Restore the unrelated persona PDF removed from the branch and add regression coverage for the review findings.
+10. Add deterministic rejection coverage for unavailable runs, habits, and occurrences identified during independent re-review.
 
 ## Risk and verification plan
 
@@ -74,7 +75,7 @@ Provide framework-independent domain rules and an application transaction contra
 
 ## Current status
 
-Implementation and review remediation are complete and ready for independent re-review. Occurrences now snapshot the habit configuration version, activity type, target, and active days used when they were created, so delayed events remain stable after later habit edits. Instant validation rejects impossible calendar dates before normalization. The unrelated persona PDF has been restored to match the baseline. Pure reconciliation and the atomic application unit-of-work contract remain otherwise unchanged.
+Implementation and review remediation are complete and ready for independent re-review. Occurrences now snapshot the habit configuration version, activity type, target, and active days used when they were created, so delayed events remain stable after later habit edits. Instant validation rejects impossible calendar dates before normalization. The unrelated persona PDF has been restored to match the baseline. Missing, cancelled, and skipped reconciliation entities now have deterministic rejection coverage. Pure reconciliation and the atomic application unit-of-work contract remain otherwise unchanged.
 
 ## Decision log
 
@@ -106,8 +107,8 @@ Implementation and review remediation are complete and ready for independent re-
 
 | Command/device/scenario | Result | Notes |
 |---|---|---|
-| `npm run check` | Pass | Prettier, ESLint with zero warnings, strict TypeScript, Jest 5/5 suites and 22/22 tests, and local React Doctor with no issues; the optional score API was unreachable |
-| Focused domain/application tests | Pass | 3/3 suites and 18/18 tests, including delayed reconciliation after habit edits and impossible timestamp rejection |
+| `npm run check` | Pass | Prettier, ESLint with zero warnings, strict TypeScript, Jest 5/5 suites and 27/27 tests, and local React Doctor with no issues; the optional score API was unreachable |
+| Focused reconciliation tests | Pass | 1/1 suite and 16/16 tests, including unavailable entities, delayed reconciliation after habit edits, and exact-once reward behavior |
 | Code knowledge-graph architecture/trace audit | Pass | Application calls domain reconciliation; domain remains the framework/vendor-free leaf layer |
 | `git diff --check` | Pass | No whitespace errors in staged or unstaged changes |
 | Dependency diff | Pass | `package.json` and `package-lock.json` are unchanged; no production or development dependency added |
@@ -115,7 +116,8 @@ Implementation and review remediation are complete and ready for independent re-
 ## Review findings
 
 - Changes were requested because historical occurrences used mutable habit configuration, impossible calendar timestamps were normalized, and the branch removed an unrelated persona PDF.
-- The implementer remediated all three findings and added regression coverage. Final approval remains pending an independent re-review.
+- The implementer remediated all three findings and added regression coverage.
+- Independent re-review confirmed those fixes and requested additional unavailable-entity rejection tests; the implementer added missing-run, cancelled-run, missing-habit, missing-occurrence, and skipped-occurrence cases. Final approval remains pending another independent re-review.
 
 ## Known issues and blockers
 
