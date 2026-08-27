@@ -35,7 +35,7 @@ Provide framework-independent domain rules and an application transaction contra
 
 - PRD principles: section 5, especially supportive rewards, offline-first behavior, and trustworthy synchronization.
 - PRD model and flow: sections 8.4-8.5, 9.2-9.4, 10.1, 12, and 13.
-- PRD requirements: CHK-01, CNT-04, CNT-05, PRA-02-PRA-07, PRA-09, and XP-01-XP-04.
+- PRD requirements: CHK-01, CNT-04, CNT-05, PRA-02-PRA-07, PRA-09, GAM-01-GAM-04, and GAM-08.
 - PRD acceptance journeys: D (progress sync), E (safe retry), F (linked session), and G (standalone session).
 - Related ADRs: ADR 0002 (local-first SQLite), ADR 0003 (Supabase boundary), and ADR 0004 (BLE adapter boundary).
 
@@ -53,6 +53,9 @@ Provide framework-independent domain rules and an application transaction contra
 4. Define an application unit-of-work port that persists event inbox, run, occurrence, ledger, and streak changes atomically.
 5. Add deterministic domain/application tests for the acceptance criteria.
 6. Run quality gates, audit the diff, and hand off for independent review.
+7. Snapshot the occurrence completion target so delayed events remain independent of later habit configuration changes.
+8. Reject impossible calendar timestamps instead of accepting JavaScript date normalization.
+9. Restore the unrelated persona PDF removed from the branch and add regression coverage for the review findings.
 
 ## Risk and verification plan
 
@@ -64,12 +67,14 @@ Provide framework-independent domain rules and an application transaction contra
 | Two distinct completion events award the same occurrence twice | Apply an event to an already completed/rewarded occurrence; assert progress may advance but ledger and streak do not |
 | Stale or conflicting configuration overwrites current state | Test lower, equal-identical, equal-different, and higher versions |
 | An archived habit is silently restored | Test that a newer unarchive proposal is rejected |
+| A delayed event is reinterpreted after a habit edit | Change the current habit type, target, and active days; assert reconciliation uses the occurrence snapshot |
+| An impossible event timestamp is silently normalized | Pass an impossible calendar date with an explicit offset; assert domain validation rejects it |
 | Partial persistence breaks idempotency | Application contract exposes one transaction boundary; fake-store test proves all writes occur within it |
 | Hardware assumptions leak into domain | Import audit and ESLint boundaries; no BLE framing or vendor dependency |
 
 ## Current status
 
-Implementation is complete and ready for independent review. The domain now owns explicit IDs, UTC instants, local dates, device clock offsets, progress/target values, configuration versions, habits, occurrences, linked/standalone runs, normalized events, XP ledger entries, and streak completion history. Pure reconciliation returns acknowledgeable applied/duplicate outcomes or typed non-acknowledgeable rejections. The application use case performs event-inbox, run, occurrence, ledger, and streak writes through one atomic unit-of-work port and returns a retryable failure when the transaction rolls back.
+Implementation and review remediation are complete and ready for independent re-review. Occurrences now snapshot the habit configuration version, activity type, target, and active days used when they were created, so delayed events remain stable after later habit edits. Instant validation rejects impossible calendar dates before normalization. The unrelated persona PDF has been restored to match the baseline. Pure reconciliation and the atomic application unit-of-work contract remain otherwise unchanged.
 
 ## Decision log
 
@@ -80,14 +85,17 @@ Implementation is complete and ready for independent review. The domain now owns
 | 2026-08-27 | Keep persistence behind one application unit-of-work port | Event inbox, occurrence, XP ledger, and streak writes must succeed or fail atomically |
 | 2026-08-27 | Defer streak expiration while recording unique scheduled-date completions | Exact-once streak evidence is required now; expiration depends on a later clock/schedule policy |
 | 2026-08-27 | Accept a delayed event recorded no later than `archived_at` | Upload-before-download sync and tombstones exist to preserve valid offline history during configuration changes |
+| 2026-08-27 | Snapshot completion-relevant habit configuration on each occurrence | Delayed offline events must preserve the target, activity type, and schedule under which the occurrence was created |
+| 2026-08-27 | Validate instant calendar components before JavaScript date parsing | `Date.parse` normalizes some impossible dates and cannot be the sole boundary validator |
 
 ## Changed files
 
 | File/module | Change |
 |---|---|
 | `docs/tasks/QUBA-003-golden-journey-domain-core.md` | Task contract and handoff record |
+| `QUBA_ICP_Persona_Behavior_Detailed.pdf` | Restored after the first QUBA-003 commit removed this out-of-scope baseline artifact |
 | `src/domain/shared/` | Branded identifiers/numeric values, UTC instant and local-date handling, and explicit device clock offset |
-| `src/domain/habits/habit.ts` | Habit/occurrence types and monotonic configuration/tombstone rules |
+| `src/domain/habits/habit.ts` | Habit/occurrence types, immutable occurrence configuration snapshots, and monotonic configuration/tombstone rules |
 | `src/domain/activities/activity.ts` | Linked/standalone activity-run union and normalized progress event |
 | `src/domain/rewards/rewards.ts` | Deterministic occurrence ledger ID, baseline XP, and scheduled-date streak recording |
 | `src/domain/sync/reconcileActivityEvent.ts` | Pure linked/standalone reconciliation, deduplication outcome, validation, and exact-once reward plan |
@@ -98,16 +106,16 @@ Implementation is complete and ready for independent review. The domain now owns
 
 | Command/device/scenario | Result | Notes |
 |---|---|---|
-| `npm run check` | Pass | Prettier, ESLint with zero warnings, strict TypeScript, Jest 5/5 suites and 20/20 tests, and local React Doctor with no issues |
-| `npx react-doctor@latest --verbose --scope changed` | Pass | Score 100/100; no issues after replacing the reported loop lookup with a `Set` |
-| Focused domain/application tests | Pass | Linked completion, partial and multiple runs, standalone isolation, duplicate retry, extra progress, invalid links/progress, archival timing, config versions/tombstone, time normalization, atomic writes, and rollback |
+| `npm run check` | Pass | Prettier, ESLint with zero warnings, strict TypeScript, Jest 5/5 suites and 22/22 tests, and local React Doctor with no issues; the optional score API was unreachable |
+| Focused domain/application tests | Pass | 3/3 suites and 18/18 tests, including delayed reconciliation after habit edits and impossible timestamp rejection |
 | Code knowledge-graph architecture/trace audit | Pass | Application calls domain reconciliation; domain remains the framework/vendor-free leaf layer |
 | `git diff --check` | Pass | No whitespace errors in staged or unstaged changes |
 | Dependency diff | Pass | `package.json` and `package-lock.json` are unchanged; no production or development dependency added |
 
 ## Review findings
 
-- Not reviewed; the implementer cannot provide final approval.
+- Changes were requested because historical occurrences used mutable habit configuration, impossible calendar timestamps were normalized, and the branch removed an unrelated persona PDF.
+- The implementer remediated all three findings and added regression coverage. Final approval remains pending an independent re-review.
 
 ## Known issues and blockers
 

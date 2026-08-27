@@ -168,15 +168,15 @@ function reconcileLinked(
     return rejected("link_mismatch");
   }
 
-  if (habit.type !== run.type || occurrence.status === "skipped") {
+  if (occurrence.activityType !== run.type || occurrence.status === "skipped") {
     return rejected(
-      habit.type !== run.type
+      occurrence.activityType !== run.type
         ? "activity_type_mismatch"
         : "occurrence_unavailable",
     );
   }
 
-  if (!habit.activeDays.includes(weekdayOf(occurrence.scheduledDate))) {
+  if (!occurrence.activeDays.includes(weekdayOf(occurrence.scheduledDate))) {
     return rejected("occurrence_not_scheduled");
   }
 
@@ -202,7 +202,7 @@ function reconcileLinked(
   const wasOccurrenceCompleted = occurrence.status === "completed";
   const occurrenceValue = progressValue(rawOccurrenceValue);
   const isOccurrenceCompleted =
-    wasOccurrenceCompleted || occurrenceValue >= habit.targetValue;
+    wasOccurrenceCompleted || occurrenceValue >= occurrence.targetValue;
 
   if (wasOccurrenceCompleted !== (context.existingXpLedgerEntry !== null)) {
     return rejected("inconsistent_reward_state");
@@ -241,7 +241,7 @@ function reconcileLinked(
   const streak = occurrenceCompleted
     ? recordStreakCompletion(
         context.streak ?? emptyHabitStreak(habit.id),
-        habit.activeDays,
+        occurrence.activeDays,
         occurrence.scheduledDate,
       )
     : null;

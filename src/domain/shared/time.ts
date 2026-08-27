@@ -4,13 +4,20 @@ export type Instant = Brand<string, "Instant">;
 export type LocalDate = Brand<string, "LocalDate">;
 
 const LOCAL_DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
-const EXPLICIT_OFFSET_PATTERN = /(?:Z|[+-]\d{2}:\d{2})$/;
+const INSTANT_PATTERN =
+  /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-](\d{2}):(\d{2}))$/;
 
 export function instant(value: string): Instant {
+  const match = INSTANT_PATTERN.exec(value);
   const epochMilliseconds = Date.parse(value);
   if (
-    !value.includes("T") ||
-    !EXPLICIT_OFFSET_PATTERN.test(value) ||
+    match === null ||
+    !isValidCalendarDate(match[1] ?? "") ||
+    Number(match[2]) > 23 ||
+    Number(match[3]) > 59 ||
+    Number(match[4]) > 59 ||
+    (match[5] !== undefined && Number(match[5]) > 23) ||
+    (match[6] !== undefined && Number(match[6]) > 59) ||
     Number.isNaN(epochMilliseconds)
   ) {
     throw new DomainInvariantError(
@@ -23,21 +30,14 @@ export function instant(value: string): Instant {
 }
 
 export function localDate(value: string): LocalDate {
-  const match = LOCAL_DATE_PATTERN.exec(value);
-  if (!match) {
+  if (!LOCAL_DATE_PATTERN.test(value)) {
     throw new DomainInvariantError(
       "invalid_local_date",
       "Local date must use YYYY-MM-DD.",
     );
   }
 
-  const year = Number(match[1]);
-  const month = Number(match[2]);
-  const day = Number(match[3]);
-  const parsed = new Date(Date.UTC(year, month - 1, day));
-  const canonical = parsed.toISOString().slice(0, 10);
-
-  if (canonical !== value) {
+  if (!isValidCalendarDate(value)) {
     throw new DomainInvariantError(
       "invalid_local_date",
       "Local date must identify a real calendar date.",
@@ -45,6 +45,19 @@ export function localDate(value: string): LocalDate {
   }
 
   return value as LocalDate;
+}
+
+function isValidCalendarDate(value: string): boolean {
+  const match = LOCAL_DATE_PATTERN.exec(value);
+  if (match === null) {
+    return false;
+  }
+
+  const parsed = new Date(`${value}T00:00:00.000Z`);
+  return (
+    !Number.isNaN(parsed.getTime()) &&
+    parsed.toISOString().slice(0, 10) === value
+  );
 }
 
 export function previousLocalDate(value: LocalDate): LocalDate {

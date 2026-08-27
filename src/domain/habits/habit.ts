@@ -26,6 +26,10 @@ export type OccurrenceStatus =
 export interface Occurrence {
   readonly id: OccurrenceId;
   readonly habitId: HabitId;
+  readonly habitConfigVersion: ConfigurationVersion;
+  readonly activityType: ActivityType;
+  readonly targetValue: TargetValue;
+  readonly activeDays: readonly Weekday[];
   readonly scheduledDate: LocalDate;
   readonly status: OccurrenceStatus;
   readonly completedValue: ProgressValue;

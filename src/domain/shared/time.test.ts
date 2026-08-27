@@ -11,6 +11,10 @@ describe("explicit domain time values", () => {
     expect(() => instant("2026-08-27T08:00:00")).toThrow("explicit UTC offset");
   });
 
+  it("rejects an impossible calendar date in a timestamp", () => {
+    expect(() => instant("2026-02-30T08:00:00Z")).toThrow("ISO 8601");
+  });
+
   it("rejects an impossible local calendar date", () => {
     expect(() => localDate("2026-02-30")).toThrow("real calendar date");
   });

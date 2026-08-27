@@ -50,6 +50,10 @@ const habit: Habit = {
 const occurrence: Occurrence = {
   id: OCCURRENCE_ID,
   habitId: HABIT_ID,
+  habitConfigVersion: habit.configVersion,
+  activityType: habit.type,
+  targetValue: habit.targetValue,
+  activeDays: habit.activeDays,
   scheduledDate: localDate("2026-08-27"),
   status: "pending",
   completedValue: progressValue(0),

@@ -47,6 +47,10 @@ const habit: Habit = {
 const occurrence: Occurrence = {
   id: OCCURRENCE_ID,
   habitId: HABIT_ID,
+  habitConfigVersion: habit.configVersion,
+  activityType: habit.type,
+  targetValue: habit.targetValue,
+  activeDays: habit.activeDays,
   scheduledDate: localDate("2026-08-27"),
   status: "pending",
   completedValue: progressValue(0),
@@ -188,7 +192,15 @@ describe("reconcileActivityEvent", () => {
     });
     const result = reconcileActivityEvent(
       event,
-      context({ activityRun: run, habit: sessionHabit }),
+      context({
+        activityRun: run,
+        habit: sessionHabit,
+        occurrence: {
+          ...occurrence,
+          activityType: "session",
+          targetValue: targetValue(30),
+        },
+      }),
     );
 
     expect(result.status).toBe("applied");
@@ -219,6 +231,11 @@ describe("reconcileActivityEvent", () => {
       }),
       context({
         habit: sessionHabit,
+        occurrence: {
+          ...occurrence,
+          activityType: "session",
+          targetValue: targetValue(30),
+        },
         activityRun: linkedRun({
           type: "session",
           targetValue: targetValue(15),
@@ -341,6 +358,50 @@ describe("reconcileActivityEvent", () => {
 
     expect(result.status).toBe("applied");
     expect(result.acknowledgeEvent).toBe(true);
+  });
+
+  it("uses the occurrence configuration snapshot for delayed events", () => {
+    const historicalOccurrence: Occurrence = {
+      ...occurrence,
+      habitConfigVersion: configurationVersion(1),
+      activityType: "session",
+      targetValue: targetValue(30),
+      activeDays: [4],
+    };
+    const currentHabit: Habit = {
+      ...habit,
+      type: "counter",
+      targetValue: targetValue(1),
+      activeDays: [5],
+      configVersion: configurationVersion(2),
+    };
+    const result = reconcileActivityEvent(
+      linkedEvent({
+        activityType: "session",
+        progressDelta: positiveProgressDelta(15),
+      }),
+      context({
+        activityRun: linkedRun({
+          type: "session",
+          targetValue: targetValue(15),
+        }),
+        habit: currentHabit,
+        occurrence: historicalOccurrence,
+      }),
+    );
+
+    expect(result.status).toBe("applied");
+    if (result.status !== "applied") {
+      throw new Error("Expected the delayed event to be applied.");
+    }
+
+    expect(result.occurrence).toMatchObject({
+      status: "in_progress",
+      completedValue: 15,
+      targetValue: 30,
+    });
+    expect(result.xpLedgerEntry).toBeNull();
+    expect(result.streak).toBeNull();
   });
 
   it("accepts extra unique progress without rewarding a completed occurrence again", () => {
