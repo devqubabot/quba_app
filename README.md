@@ -33,6 +33,23 @@ If these documents conflict, stop the affected implementation and resolve the co
 
 Every change requires a task brief, acceptance criteria, verification, and a handoff another agent can understand. See the [task workflow](./docs/tasks/README.md), [Definition of Done](./docs/engineering/definition-of-done.md), and [engineering language policy](./docs/engineering/language-policy.md).
 
+## Install Quba Devkit for Codex
+
+[Quba Devkit](https://github.com/devqubabot/quba-devkit) is a separate, skills-only Codex plugin that provides reusable Quba engineering workflows such as `$quba-review`. It is not an npm package and does not become an application dependency.
+
+From this repository's root, install it from the included **Quba App** marketplace:
+
+```bash
+codex plugin marketplace add .
+codex plugin add quba-devkit@quba-app
+```
+
+Alternatively, restart the ChatGPT desktop app, open **Plugins**, select the **Quba App** marketplace, and install **Quba Devkit**. The marketplace downloads the plugin directly from its GitHub repository; private-repository access requires matching GitHub credentials.
+
+After installation, start a new Codex task and invoke `$quba-review` to verify that the bundled skill is available.
+
+See the official OpenAI documentation for [local plugin marketplaces](https://developers.openai.com/plugins/build/plugins#install-a-local-plugin-manually) and [using installed plugins](https://developers.openai.com/codex/plugins/#install-and-use-a-plugin).
+
 ## Local development
 
 Requirements: Node.js 22.13 or newer within major version 22, npm, and the native toolchain for the target platform.
