@@ -1,8 +1,8 @@
 # QUBA-003: Golden Journey domain core
 
-- Status: in_review
+- Status: done
 - Owner/implementer: primary Codex agent
-- Reviewer: unassigned (must be separate from implementer)
+- Reviewer: independent Codex review agent
 - Branch/worktree: `quba-003-golden-journey-domain-core`
 - Last updated: 2026-08-27 Asia/Jakarta
 
@@ -75,7 +75,7 @@ Provide framework-independent domain rules and an application transaction contra
 
 ## Current status
 
-Implementation and review remediation are complete and ready for independent re-review. Occurrences now snapshot the habit configuration version, activity type, target, and active days used when they were created, so delayed events remain stable after later habit edits. Instant validation rejects impossible calendar dates before normalization. The unrelated persona PDF has been restored to match the baseline. Missing, cancelled, and skipped reconciliation entities now have deterministic rejection coverage. Pure reconciliation and the atomic application unit-of-work contract remain otherwise unchanged.
+Implementation and review remediation are complete and independently approved. Occurrences now snapshot the habit configuration version, activity type, target, and active days used when they were created, so delayed events remain stable after later habit edits. Instant validation rejects impossible calendar dates before normalization. The unrelated persona PDF has been restored to match the baseline. Missing, cancelled, and skipped reconciliation entities have deterministic rejection coverage. Pure reconciliation and the atomic application unit-of-work contract remain otherwise unchanged.
 
 ## Decision log
 
@@ -112,12 +112,14 @@ Implementation and review remediation are complete and ready for independent re-
 | Code knowledge-graph architecture/trace audit | Pass | Application calls domain reconciliation; domain remains the framework/vendor-free leaf layer |
 | `git diff --check` | Pass | No whitespace errors in staged or unstaged changes |
 | Dependency diff | Pass | `package.json` and `package-lock.json` are unchanged; no production or development dependency added |
+| Independent re-review at `f6722c5` | Approve | No actionable findings; all acceptance criteria satisfied, with SQLite/runtime risks explicitly deferred to QUBA-004 |
 
 ## Review findings
 
 - Changes were requested because historical occurrences used mutable habit configuration, impossible calendar timestamps were normalized, and the branch removed an unrelated persona PDF.
 - The implementer remediated all three findings and added regression coverage.
-- Independent re-review confirmed those fixes and requested additional unavailable-entity rejection tests; the implementer added missing-run, cancelled-run, missing-habit, missing-occurrence, and skipped-occurrence cases. Final approval remains pending another independent re-review.
+- Independent re-review confirmed those fixes and requested additional unavailable-entity rejection tests; the implementer added missing-run, cancelled-run, missing-habit, missing-occurrence, and skipped-occurrence cases.
+- Final independent re-review found no actionable findings and approved QUBA-003.
 
 ## Known issues and blockers
 
@@ -128,4 +130,4 @@ Implementation and review remediation are complete and ready for independent re-
 
 ## Handoff / exact next step
 
-A separate reviewer checks the normalized progress-delta semantics, archival-time rule, reward-state consistency, and unit-of-work contract against the PRD and ADRs, then runs `npm run check`. Resolve findings before changing the task to `done`. After acceptance, QUBA-004 can implement the SQLite schema, forward-only migration, repositories, event inbox, XP ledger constraints, and the unit-of-work port with fresh/upgrade/rollback tests.
+QUBA-003 is accepted. Start QUBA-004 from the reviewed baseline to implement the SQLite schema, forward-only migration, repositories, event inbox, XP ledger constraints, and the unit-of-work port with fresh/upgrade/rollback tests.
