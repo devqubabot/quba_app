@@ -1,9 +1,10 @@
-import { Instant, LocalDate, Weekday } from "../shared/time";
+import { Instant, LocalDate, Weekday, weekdayOf } from "../shared/time";
 import {
   ConfigurationVersion,
   HabitId,
   OccurrenceId,
   ProgressValue,
+  progressValue,
   TargetValue,
 } from "../shared/values";
 
@@ -48,6 +49,22 @@ export type HabitConfigurationResult =
         | "tombstone_removal";
     };
 
+export type OccurrencePreparationResult =
+  | { readonly status: "created"; readonly occurrence: Occurrence }
+  | { readonly status: "unchanged"; readonly occurrence: Occurrence }
+  | {
+      readonly status: "rejected";
+      readonly code:
+        "habit_unavailable" | "inactive_scheduled_date" | "occurrence_conflict";
+    };
+
+export interface OccurrencePreparationInput {
+  readonly id: OccurrenceId;
+  readonly habit: Habit;
+  readonly scheduledDate: LocalDate;
+  readonly existingOccurrence: Occurrence | null;
+}
+
 export function applyHabitConfiguration(
   current: Habit,
   proposed: Habit,
@@ -71,6 +88,65 @@ export function applyHabitConfiguration(
   }
 
   return { status: "applied", habit: proposed };
+}
+
+export function prepareOccurrence(
+  input: OccurrencePreparationInput,
+): OccurrencePreparationResult {
+  const { existingOccurrence, habit, id, scheduledDate } = input;
+
+  if (!habit.enabled || habit.archivedAt !== null) {
+    return { status: "rejected", code: "habit_unavailable" };
+  }
+
+  if (!habit.activeDays.includes(weekdayOf(scheduledDate))) {
+    return { status: "rejected", code: "inactive_scheduled_date" };
+  }
+
+  if (existingOccurrence !== null) {
+    return occurrenceSnapshotMatches(
+      existingOccurrence,
+      id,
+      habit,
+      scheduledDate,
+    )
+      ? { status: "unchanged", occurrence: existingOccurrence }
+      : { status: "rejected", code: "occurrence_conflict" };
+  }
+
+  return {
+    status: "created",
+    occurrence: {
+      id,
+      habitId: habit.id,
+      habitConfigVersion: habit.configVersion,
+      activityType: habit.type,
+      targetValue: habit.targetValue,
+      activeDays: [...habit.activeDays],
+      scheduledDate,
+      status: "pending",
+      completedValue: progressValue(0),
+      completedAt: null,
+    },
+  };
+}
+
+function occurrenceSnapshotMatches(
+  occurrence: Occurrence,
+  id: OccurrenceId,
+  habit: Habit,
+  scheduledDate: LocalDate,
+): boolean {
+  return (
+    occurrence.id === id &&
+    occurrence.habitId === habit.id &&
+    occurrence.habitConfigVersion === habit.configVersion &&
+    occurrence.activityType === habit.type &&
+    occurrence.targetValue === habit.targetValue &&
+    occurrence.scheduledDate === scheduledDate &&
+    occurrence.activeDays.length === habit.activeDays.length &&
+    occurrence.activeDays.every((day, index) => day === habit.activeDays[index])
+  );
 }
 
 function habitsEqual(left: Habit, right: Habit): boolean {
