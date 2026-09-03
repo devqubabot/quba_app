@@ -1,5 +1,5 @@
-import { HomeScreen } from "@/presentation/home/HomeScreen";
+import { Redirect, type Href } from "expo-router";
 
 export default function IndexRoute() {
-  return <HomeScreen />;
+  return <Redirect href={"/(onboarding)" as Href} />;
 }

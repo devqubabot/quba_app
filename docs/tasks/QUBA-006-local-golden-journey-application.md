@@ -1,10 +1,10 @@
 # QUBA-006: Local Golden Journey application orchestration
 
-- Status: in_review
+- Status: done
 - Owner/implementer: primary Codex agent
-- Reviewer: independent review completed with `Changes requested`; re-reviewer unassigned
+- Reviewer: independent Codex re-review completed with `Approve`
 - Branch/worktree: `codex/quba-006-local-golden-journey-application`
-- Last updated: 2026-09-01 Asia/Jakarta
+- Last updated: 2026-09-02 20:19 WIB
 
 ## Goal
 
@@ -69,7 +69,7 @@ Provide framework-independent application use cases and a SQLite adapter that ca
 
 ## Current status
 
-Implementation and independent-review remediation are complete. Domain factories now prepare immutable occurrence snapshots and quick activity runs with typed retry/conflict outcomes. Application use cases save habit/occurrence setup and linked/standalone runs through one transaction, and the SQLite adapter reuses the QUBA-004 exclusive transaction boundary. Application and real-SQLite regression coverage now proves that identical linked and standalone activity-run retries return `unchanged`, perform no application write, preserve mutable progress/status, and retain one row per run. The reviewer also implemented this remediation, so a separate re-review is required before approval.
+Implementation, review remediation, and independent re-review are complete and approved. Domain factories prepare immutable occurrence snapshots and quick activity runs with typed retry/conflict outcomes. Application use cases save habit/occurrence setup and linked/standalone runs through one transaction, and the SQLite adapter reuses the QUBA-004 exclusive transaction boundary. Application and real-SQLite regression coverage proves that identical linked and standalone activity-run retries return `unchanged`, perform no application write, preserve mutable progress/status, and retain one row per run. The independent re-reviewer did not implement or edit the change and issued `Approve` with no actionable findings.
 
 ## Decision log
 
@@ -101,13 +101,16 @@ Implementation and independent-review remediation are complete. Domain factories
 | `git diff --check` | Pass | No whitespace errors |
 | Dependency diff | Pass | `package.json`, `package-lock.json`, and `tsconfig.json` are unchanged in QUBA-006 |
 | React Doctor latest changed-scope scan | No QUBA-006 findings | The tool selected the repository's unrelated QUBA-005 remote default as baseline and reported two pre-existing sequential-await warnings in untouched QUBA-004 files; score 79/100 is therefore not a QUBA-006 regression score |
+| Independent re-review focused QUBA-006 tests | Pass | 4/4 suites and 23/23 tests passed, including linked and standalone retry behavior through application and real-SQLite boundaries |
+| Independent re-review `npm run check` | Pass | Prettier, ESLint, strict TypeScript, 11/11 Jest suites and 59/59 tests, and React Doctor completed |
+| Independent re-review scope/dependency audit | Pass | `git diff --check e68eac4..52e922f` passed; dependency/config diff was empty; graph traces confirmed no SQLite or Expo import edge from application |
 
 ## Review findings
 
 - Implementer pre-review found one missing proof for same-ID occurrence snapshot conflicts; explicit domain and application regression assertions were added and all checks were rerun.
 - Independent review requested changes because linked and standalone activity-run retry behavior was not proven through the application and real-SQLite boundaries.
 - The reviewer implemented the requested regression coverage and reran the focused and canonical checks successfully.
-- No final approval has been issued: because the reviewer also implemented the remediation, a separate re-review remains required.
+- Independent re-review of `e68eac4..52e922f` found no actionable defects and issued `Approve`; the re-reviewer did not implement or edit the change.
 
 ## Known issues and blockers
 
@@ -117,4 +120,4 @@ Implementation and independent-review remediation are complete. Domain factories
 
 ## Handoff / exact next step
 
-Ask a separate re-reviewer to review the remediated working-tree diff against local `main` (QUBA-004 at `e68eac4`), confirm the activity-run retry regression coverage, rerun the focused and canonical checks, and record a verdict before the task can move from `in_review` to `done`.
+QUBA-006 is complete and approved. The next UI task may consume its application contracts while preserving the presentation/application boundary and adding presentation-facing read models in its own scope.

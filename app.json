@@ -21,6 +21,19 @@
         {
           "launchMode": "most-recent"
         }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./src/presentation/assets/fonts/Nunito-Regular.ttf",
+            "./src/presentation/assets/fonts/Nunito-Medium.ttf",
+            "./src/presentation/assets/fonts/Nunito-SemiBold.ttf",
+            "./src/presentation/assets/fonts/Nunito-Bold.ttf",
+            "./src/presentation/assets/fonts/Nunito-ExtraBold.ttf",
+            "./src/presentation/assets/fonts/Nunito-Black.ttf"
+          ]
+        }
       ]
     ],
     "experiments": {

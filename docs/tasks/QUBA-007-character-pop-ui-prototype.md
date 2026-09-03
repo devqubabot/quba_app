@@ -4,7 +4,7 @@
 - Owner/implementer: primary Codex agent
 - Reviewer: product owner (user)
 - Branch/worktree: `main` working tree
-- Last updated: 2026-09-02 Asia/Jakarta
+- Last updated: 2026-09-03 Asia/Jakarta
 
 ## Goal
 
@@ -62,7 +62,7 @@ Preserve the selected Character Pop visual direction as a version-controlled, st
 
 ## Current status
 
-The selected Character Pop prototype now uses Quba lime `#BAFF72` for primary actions, active navigation, progress, and signature hero surfaces. Its mascot system uses a product-faithful render for Pairing, Device, and Profile contexts, plus Soft Quba for Welcome, First Win, Home, and Empty states. Soft Quba preserves the physical device's rounded cuboid body, two top buttons, side housing, and lower-front blocks while restoring the original orange mascot's joyful face and playful energy. The revised prototype passes its deterministic and repository quality checks and has been accepted by the product owner. Production implementation has not started.
+The selected Character Pop prototype now uses Quba lime `#BAFF72` for primary actions, active navigation, progress, and signature hero surfaces. Its mascot system uses a product-faithful render for Pairing, Device, and Profile contexts, plus Soft Quba for Welcome, First Win, Home, and Empty states. Soft Quba preserves the physical device's rounded cuboid body, two top buttons, side housing, and lower-front blocks while restoring the original orange mascot's joyful face and playful energy. The revised prototype passes its deterministic and repository quality checks and has been accepted by the product owner. Production implementation is tracked separately in QUBA-008.
 
 ## Decision log
 
@@ -74,6 +74,7 @@ The selected Character Pop prototype now uses Quba lime `#BAFF72` for primary ac
 | 2026-09-02 | Align the expressive mascot with the physical Quba device    | Keeps the app character recognizable as the hardware while allowing screen expressions and a simple panel wave  |
 | 2026-09-02 | Use product-faithful and expressive hybrid mascot modes      | Hardware flows stay accurate while emotional moments retain the bold personality of the original orange mascot  |
 | 2026-09-02 | Promote Soft Quba as the primary expressive mascot            | Keeps the physical cuboid identity while restoring the original orange mascot's joyful face and playful energy   |
+| 2026-09-03 | Retire `quba-mascot-hybrid-v3.png`                            | Product owner clarified the hybrid exploration should not be used again; Soft Quba and product-faithful Quba remain the active references |
 
 ## Changed files
 
@@ -82,11 +83,11 @@ The selected Character Pop prototype now uses Quba lime `#BAFF72` for primary ac
 | `docs/prototypes/character-pop/character-pop-full.html`     | Standalone clickable Character Pop prototype             |
 | `docs/prototypes/character-pop/quba-mascot-pop.png`         | Preserved original humanoid mascot exploration           |
 | `docs/prototypes/character-pop/quba-mascot-physical-v2.png` | Product-faithful expressive mascot used by the prototype |
-| `docs/prototypes/character-pop/quba-mascot-hybrid-v3.png`   | Preserved expressive hybrid exploration                  |
 | `docs/prototypes/character-pop/quba-mascot-soft-v4.png`     | Primary Soft Quba mascot used in emotional UI moments     |
 | `docs/prototypes/character-pop/character-pop-full.test.cjs` | Deterministic Golden Journey and critical-state checks   |
 | `docs/prototypes/character-pop/README.md`                   | Review instructions, scope, and prototype limitations    |
 | `docs/tasks/QUBA-007-character-pop-ui-prototype.md`         | Task scope, decisions, verification, and handoff record  |
+| `docs/prototypes/character-pop/quba-mascot-hybrid-v3.png`   | Retired and intentionally removed on 2026-09-03           |
 
 ## Verification evidence
 
@@ -95,9 +96,9 @@ The selected Character Pop prototype now uses Quba lime `#BAFF72` for primary ac
 - `npx eslint docs/prototypes/character-pop/character-pop-full.test.cjs --max-warnings 0`: passed.
 - `npm run check`: passed; 59 tests passed. React Doctor reported three existing infrastructure warnings and could not reach its optional score API.
 - Critical WCAG 2 contrast pairs measured: dark ink on lime `14.62:1`, deep-green interactive text on warm background `7.83:1`, strong-green indicator on warm background `4.91:1`, and lime on the dark background `15.70:1`.
-- Repository-local HTTP review returned `200` for `character-pop-full.html`, `quba-mascot-physical-v2.png`, and `quba-mascot-hybrid-v3.png`.
+- Repository-local HTTP review returned `200` for `character-pop-full.html`, `quba-mascot-physical-v2.png`, and the then-preserved `quba-mascot-hybrid-v3.png`.
 - The product-faithful mascot is a `1254 × 1254` RGBA PNG with genuine alpha transparency; the original generated checkerboard draft was not added to the repository.
-- The expressive hybrid mascot remains as a separate `1254 × 1254` RGBA comparison asset and is no longer referenced by the active prototype.
+- The expressive hybrid mascot was later retired by product owner decision on 2026-09-03 and is no longer preserved or referenced by the active prototype.
 - The primary Soft Quba mascot is a `1237 × 1271` RGBA PNG with genuine alpha transparency; all four emotional UI placements now reference `quba-mascot-soft-v4.png`.
 - Browser review from repository-local servers confirmed computed primary `#baff72`, loaded product-faithful and hybrid assets, no browser warnings/errors, and representative Welcome, Home light/dark, and Device appearances.
 - Scope audit: `git status --short` shows changes only under `docs/prototypes/` and this task brief; production application code is untouched.

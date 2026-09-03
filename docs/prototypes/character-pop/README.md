@@ -33,10 +33,11 @@ Use **Prototype map** in the top-right corner to jump between screens and simula
 
 - `character-pop-full.html`: self-contained UI, styles, templates, and interactions.
 - `quba-mascot-soft-v4.png`: primary expressive mascot combining Soft Quba's physical form with the original orange mascot's joyful face.
-- `quba-mascot-hybrid-v3.png`: preserved expressive hybrid exploration for comparison.
 - `quba-mascot-physical-v2.png`: product-faithful expressive Quba mascot used by the prototype.
 - `quba-mascot-pop.png`: preserved original humanoid mascot exploration for comparison.
 - `character-pop-full.test.cjs`: deterministic flow and static accessibility checks.
+
+Retired 2026-09-03: `quba-mascot-hybrid-v3.png` is intentionally removed from preserved references and must not be used again.
 
 ## Important limitations
 
